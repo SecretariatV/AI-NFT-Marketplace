@@ -65,11 +65,16 @@ export default function MarketplaceHeader({
         Build your AI Agent with Specialized Datasets
       </Box>
 
-      <Box w="100%" px={8} py={12}>
-        <HStack alignItems={"center"}>
+      <Box w="100%" px={[0, 0, 8]} py={12}>
+        <Stack
+          spacing={[4, 4, 0]}
+          //   justifyContent={"flex-start"}
+          direction={["column-reverse", "column-reverse", "row"]}
+          alignItems={["flex-end", "flex-end", "center"]}
+        >
           <Flex
             gap={5}
-            w="80%"
+            w={["100%", "100%", "80%"]}
             overflowY={"hidden"}
             overflowX={"auto"}
             css={{
@@ -142,7 +147,7 @@ export default function MarketplaceHeader({
               </Text>
             </Flex>
           </Box>
-        </HStack>
+        </Stack>
       </Box>
     </>
   );
