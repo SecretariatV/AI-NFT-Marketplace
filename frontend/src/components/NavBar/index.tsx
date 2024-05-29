@@ -5,17 +5,20 @@ import {
   IconButton,
   useMediaQuery,
   Flex,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { MdAttachMoney, MdChevronLeft } from "react-icons/md";
+import { useRouter } from "next/router";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 
 export default function NavBar() {
   const { isCollapsed, setIsCollapsed, index } = useGlobalContext();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const router = useRouter();
 
   return (
     <>
-      {/* Nav */}
       <Box
         zIndex={"tooltip"}
         position={"fixed"}
@@ -61,8 +64,9 @@ export default function NavBar() {
                 h="50px"
                 colorScheme="purple"
                 leftIcon={<MdAttachMoney />}
+                onClick={() => router.push("/publish")}
               >
-                Sell Your Data
+                Start Selling
               </Button>
             )}
             <Button
