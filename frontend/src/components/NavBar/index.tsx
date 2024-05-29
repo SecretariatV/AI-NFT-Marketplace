@@ -1,9 +1,16 @@
-import { Box, Button, HStack, IconButton } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  IconButton,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import { MdChevronLeft } from "react-icons/md";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 
 export default function NavBar() {
   const { isCollapsed, setIsCollapsed } = useGlobalContext();
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   return (
     <>
@@ -14,7 +21,9 @@ export default function NavBar() {
         right={0}
         bg="rgba(18, 18, 18, 0.8)"
         backdropFilter="blur(10px)"
-        w={`calc(100% - ${isCollapsed ? "70px" : "250px"})`}
+        w={`calc(100% - ${
+          isCollapsed ? (isMobile ? "0px" : "70px") : "250px"
+        })`}
         borderBottom={"0.3px solid #212529"}
       >
         <HStack
@@ -36,7 +45,12 @@ export default function NavBar() {
             onClick={() => setIsCollapsed(!isCollapsed)}
           />
 
-          <Button color={"white"} bg="#212529" h="50px">
+          <Button
+            display={!isCollapsed && isMobile ? "none" : "block"}
+            color={"white"}
+            bg="#212529"
+            h="50px"
+          >
             Connect Wallet
           </Button>
         </HStack>

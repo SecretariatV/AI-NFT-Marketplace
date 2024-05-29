@@ -1,4 +1,4 @@
-import { Box, Text, HStack, Avatar } from "@chakra-ui/react";
+import { Box, Text, HStack, Avatar, useMediaQuery } from "@chakra-ui/react";
 import { MdHomeFilled } from "react-icons/md";
 import { BiStore } from "react-icons/bi";
 import { FaGithub } from "react-icons/fa";
@@ -6,7 +6,7 @@ import { useGlobalContext } from "@/contexts/GlobalContext";
 
 export default function SideBar() {
   const { isCollapsed, setIsCollapsed, index, setIndex } = useGlobalContext();
-
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
   const menuItems = [
     {
       title: "Home",
@@ -21,15 +21,16 @@ export default function SideBar() {
   return (
     <>
       {/* Sidebar */}
+
       <Box
-        zIndex={"tooltip"}
+        zIndex={isMobile && isCollapsed ? -1 : "tooltip"}
         position={"fixed"}
         top={0}
         left={0}
         px={[1, 1, 4]}
         bg="#121212"
-        w={`${isCollapsed ? "100px" : "250px"}`}
-        display={"flex"}
+        w={`${isCollapsed ? (isMobile ? 0 : "100px") : "250px"}`}
+        display={isMobile && isCollapsed ? "none" : "flex"}
         flexDir={"column"}
         alignItems={`${isCollapsed ? "center" : "flex-start"}`}
       >
@@ -48,7 +49,7 @@ export default function SideBar() {
         </Box>
 
         <Box
-          px={isCollapsed ? 3 : 0}
+          px={isCollapsed ? (isMobile ? 0 : 3) : 0}
           w={`${isCollapsed ? "100px" : "250px"}`}
           h="calc(100vh - 80px)"
         >

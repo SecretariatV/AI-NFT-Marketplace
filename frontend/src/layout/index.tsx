@@ -1,21 +1,12 @@
-import {
-  Box,
-  Button,
-  Text,
-  HStack,
-  IconButton,
-  Avatar,
-} from "@chakra-ui/react";
-import { ReactNode, useState } from "react";
-import { MdChevronLeft, MdHomeFilled } from "react-icons/md";
-import { BiStore } from "react-icons/bi";
-import { FaGithub } from "react-icons/fa";
+import { Box, useMediaQuery } from "@chakra-ui/react";
+import { ReactNode } from "react";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import NavBar from "@/components/NavBar";
 import SideBar from "@/components/SideBar";
 
 export default function Layout({ children }: { children: ReactNode | any }) {
   const { isCollapsed } = useGlobalContext();
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   return (
     <>
@@ -27,10 +18,12 @@ export default function Layout({ children }: { children: ReactNode | any }) {
         <Box
           right={0}
           position={"absolute"}
-          pt="100px"
-          w={`calc(100% - ${isCollapsed ? "70px" : "250px"})`}
+          pt={isMobile ? "80px" : "100px"}
+          w={` ${
+            isMobile ? "100%" : `calc(100% - ${isCollapsed ? "70px" : "250px"})`
+          }`}
         >
-          <Box px={12}>
+          <Box px={[4, 4, 12]} bg="#121212">
             <Box py={8}>{children}</Box>
           </Box>
         </Box>
