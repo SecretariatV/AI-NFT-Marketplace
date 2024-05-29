@@ -37,7 +37,7 @@ export default function HomeView() {
 
       <Box mt={8}>
         <Headers
-          icon={<FaRobot size={"lg"} />}
+          icon={<MdPublic size={"lg"} />}
           title="Public Agents"
           bg="transparent"
         />
