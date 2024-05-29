@@ -3,7 +3,7 @@ import Layout from "@/layout";
 import { useEffect } from "react";
 import MyViews from "@/components/Views";
 
-export default function Creators() {
+export default function Views() {
   const { index, setIndex } = useGlobalContext();
 
   useEffect(() => {
