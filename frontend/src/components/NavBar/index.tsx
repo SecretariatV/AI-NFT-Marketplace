@@ -4,12 +4,13 @@ import {
   HStack,
   IconButton,
   useMediaQuery,
+  Flex,
 } from "@chakra-ui/react";
-import { MdChevronLeft } from "react-icons/md";
+import { MdAttachMoney, MdChevronLeft } from "react-icons/md";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 
 export default function NavBar() {
-  const { isCollapsed, setIsCollapsed } = useGlobalContext();
+  const { isCollapsed, setIsCollapsed, index } = useGlobalContext();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   return (
@@ -45,14 +46,34 @@ export default function NavBar() {
             onClick={() => setIsCollapsed(!isCollapsed)}
           />
 
-          <Button
-            display={!isCollapsed && isMobile ? "none" : "block"}
-            color={"white"}
-            bg="#212529"
-            h="50px"
-          >
-            Connect Wallet
-          </Button>
+          <Flex align={"center"} gap={5}>
+            {index === 1 && (
+              <Button
+                color={"#D968D0"}
+                border={"1.25px solid #D968D0"}
+                bgClip={"linear(to-r, #D968D0, #EB4634)"}
+                bg="transparent"
+                _hover={{
+                  bgGradient: "linear(to-r, #D968D0, #EB4634)",
+                  color: "white",
+                  border: "none",
+                }}
+                h="50px"
+                colorScheme="purple"
+                leftIcon={<MdAttachMoney />}
+              >
+                Sell Your Data
+              </Button>
+            )}
+            <Button
+              display={!isCollapsed && isMobile ? "none" : "block"}
+              color={"white"}
+              bg="#212529"
+              h="50px"
+            >
+              Connect Wallet
+            </Button>
+          </Flex>
         </HStack>
       </Box>
     </>

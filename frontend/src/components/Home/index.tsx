@@ -43,7 +43,12 @@ export default function HomeView() {
         />
 
         {/* display cards of AI Agents */}
-        <Box display="flex" flexWrap="wrap" justifyContent="space-around" p={4}>
+        <Box
+          display="flex"
+          w="100%"
+          alignItems={["center", "center", "flex-start"]}
+          p={4}
+        >
           {mockAgentsData.map((agent, i) => (
             <AgentsCard
               key={i}

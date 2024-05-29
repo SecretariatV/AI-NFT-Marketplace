@@ -23,7 +23,9 @@ export default function CreateAgentCard() {
               <FaRobot fontSize={"70px"} />
             </Center>
             <Text>Craft and fine tune your agent</Text>
-            <Button mt={4} h="50px" colorScheme="green">
+            <Button
+                        bgGradient="linear(to-r, #D968D0, #EB4634)"
+            mt={4} h="50px" colorScheme="purple">
               Get Started
             </Button>
           </Box>

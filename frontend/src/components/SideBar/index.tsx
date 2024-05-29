@@ -1,7 +1,7 @@
 import { Box, Text, HStack, Avatar, useMediaQuery } from "@chakra-ui/react";
 import { MdHomeFilled } from "react-icons/md";
 import { BiStore } from "react-icons/bi";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaRobot } from "react-icons/fa";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 
 export default function SideBar() {
@@ -35,13 +35,22 @@ export default function SideBar() {
         alignItems={`${isCollapsed ? "center" : "flex-start"}`}
       >
         <Box h="80px" display={"flex"} alignItems={"center"}>
-          <Box h="50px" rounded={"full"} w="50px" bg="gray.700" />
+          <Avatar
+            icon={<FaRobot />}
+            h="50px"
+            rounded={"full"}
+            border={"2px solid #D968D0"}
+            w="50px"
+            color={"#D968D0"}
+            bg="whiteAlpha.900"
+          />
           {!isCollapsed && (
             <Text
               ml="3"
               fontSize={"3xl"}
-              fontWeight={"lighter"}
+              fontWeight={"light"}
               letterSpacing={"1.25px"}
+              color={"#D968D0"}
             >
               ZeroAI
             </Text>
@@ -64,6 +73,7 @@ export default function SideBar() {
             {menuItems.map((item: any, i: number) => (
               <HStack
                 bg={index === i ? "#2c2d31" : "transparent"}
+                _hover={{ bg: "#2c2d31" }}
                 color={index === i ? "white" : "#7c8693"}
                 py={3}
                 px={2}
@@ -79,7 +89,7 @@ export default function SideBar() {
                   rounded={"full"}
                   w="30px"
                   bg="#1e1f23"
-                  color={index === i ? "white" : "#7c8693"}
+                  color={index === i ? "#D968D0" : "#7c8693"}
                 />
 
                 {!isCollapsed && (
@@ -88,6 +98,7 @@ export default function SideBar() {
                     fontSize={"md"}
                     fontWeight={"bold"}
                     letterSpacing={"1.25px"}
+                    color={index === i ? "#D968D0" : "#7c8693"}
                   >
                     {item.title}
                   </Text>
