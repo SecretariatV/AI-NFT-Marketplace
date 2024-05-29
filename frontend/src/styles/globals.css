@@ -18,12 +18,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: #121212;
 }
 
 @layer utilities {
@@ -31,3 +26,5 @@ body {
     text-wrap: balance;
   }
 }
+
+
