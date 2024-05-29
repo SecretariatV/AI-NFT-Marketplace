@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   VStack,
@@ -33,30 +33,67 @@ import {
 import { FaChevronLeft, FaPlus, FaMinus } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { MdAttachMoney, MdPhotoLibrary } from "react-icons/md";
+import ErrorDialog from "@/components/Modals/errorDialog";
+import { extractTextFromFile } from "@/utils/helpers";
+import lighthouse from "@lighthouse-web3/sdk";
+import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
 const PublishPage = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
   const [file, setFile] = useState<File | null>(null);
+  const [fileContent, setFileContent] = useState<any>(null);
   const [nftTitle, setNftTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [termsChecked, setTermsChecked] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorTitle, setErrorTitle] = useState("");
+  const closeError = () => setIsError(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setFile(event.target.files[0]);
+      const file = event.target.files[0];
+      if (
+        (file && file.type === "application/msword") ||
+        (file &&
+          file.type ===
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+      ) {
+        setFile(file);
+        localStorage.removeItem("savedDocument");
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const content = reader.result as ArrayBuffer;
+          const textContent = await extractTextFromFile(content);
+          setFileContent(textContent);
+        };
+        reader.readAsArrayBuffer(file);
+      } else {
+        setIsError(true);
+        setErrorTitle("Unsupported File Format");
+        setErrorMessage(
+          "Currently, we only accept documents in .doc or .docx format."
+        );
+      }
     }
   };
 
-  const handleCoverImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (event.target.files) {
-      setCoverImage(event.target.files[0]);
+  useEffect(() => {
+    if (fileContent) {
+      localStorage.setItem("savedDocument", JSON.stringify(fileContent));
     }
-  };
+  }, [fileContent]);
+
+  //   const handleCoverImageChange = (
+  //     event: React.ChangeEvent<HTMLInputElement>
+  //   ) => {
+  //     if (event.target.files) {
+  //       setCoverImage(event.target.files[0]);
+  //     }
+  //   };
 
   const handleSubmit = async () => {
     console.log("Submit:", {
@@ -68,6 +105,67 @@ const PublishPage = () => {
       termsChecked,
     });
     // Add encryption, minting, and smart contract interaction here
+    //upload file content to lighthouse
+    const content = localStorage.getItem("savedDocument");
+    if (!content) {
+      console.log("please reupload  document");
+      return;
+    }
+    const response = await lighthouse.uploadText(
+      content as string,
+      process.env.LIGHTHOUSE_API_KEY as string
+    );
+    console.log(response);
+    const documentID = response.data.Hash;
+
+    //encrypt this document ID on lit protocol
+
+    // Create our litNodeClient
+    const litNodeClient = new LitJsSdk.LitNodeClient({
+      litNetwork: "cayenne",
+    });
+
+    await litNodeClient.connect();
+
+    await litNodeClient.connect();
+    const authSig = await LitJsSdk.checkAndSignAuthMessage({
+      chain: "ethereum",
+      nonce: LitJsSdk.LitNodeClient.getExpiration(),
+    });
+
+    //lit access condition
+    const accessControlConditions = [
+      {
+        contractAddress: "",
+        standardContractType: "",
+        chain: "ethereum",
+        method: "",
+        parameters: [":userAddress"],
+        returnValueTest: {
+          comparator: "=",
+          value: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
+        },
+      },
+      { operator: "or" },
+      {
+        contractAddress: "0xA80617371A5f511Bf4c1dDf822E6040acaa63e71",
+        standardContractType: "ERC721",
+        chain: "sepolia",
+        method: "balanceOf",
+        parameters: [":userAddress"],
+        returnValueTest: {
+          comparator: ">",
+          value: "0",
+        },
+      },
+    ];
+
+    //now use this to build the metadata object
+    const metadata = {
+      document: documentID,
+      title: nftTitle,
+      description,
+    };
   };
 
   return (
@@ -121,7 +219,7 @@ const PublishPage = () => {
             <Tabs p={0} variant={"unstyled"} colorScheme="purple">
               <TabList>
                 <Tab> New File</Tab>
-                <Tab>Exiting File</Tab>
+                <Tab>Existing File</Tab>
               </TabList>
               <TabIndicator
                 mt="-1.5px"
@@ -176,11 +274,13 @@ const PublishPage = () => {
                 <TabPanel>
                   <Box position={"relative"} w="100%">
                     <Input
+                      //   readOnly={true}
+                      isDisabled={true}
                       borderRadius={"8px"}
                       border={"1px solid #3d3d3d"}
                       h="60px"
                       focusBorderColor="#3d3d3d"
-                      placeholder="Enter IPFS CID"
+                      placeholder="Coming soon"
                     />
                     <Box
                       zIndex={1}
@@ -288,7 +388,12 @@ const PublishPage = () => {
                   </Box>
                 </FormControl>
               </HStack>
-              <Text mt={2} fontSize={"xs"} fontWeight={"bold"}>
+              <Text
+                mt={2}
+                fontSize={"xs"}
+                textAlign={"left"}
+                fontWeight={"bold"}
+              >
                 0 ETH
               </Text>
             </VStack>
@@ -361,6 +466,13 @@ const PublishPage = () => {
           </Box>
         </Stack>
       </Box>
+
+      <ErrorDialog
+        isOpen={isError}
+        onClose={closeError}
+        title={errorTitle}
+        message={errorMessage}
+      />
     </Slide>
   );
 };

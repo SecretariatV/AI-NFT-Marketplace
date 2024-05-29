@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -7,15 +8,28 @@ import {
   Flex,
   useDisclosure,
 } from "@chakra-ui/react";
-import { MdAttachMoney, MdChevronLeft } from "react-icons/md";
 import { useRouter } from "next/router";
+import { MdAttachMoney, MdChevronLeft } from "react-icons/md";
+
 import { useGlobalContext } from "@/contexts/GlobalContext";
+import { usePrivy } from "@privy-io/react-auth";
+import ErrorDialog from "../Modals/errorDialog";
 
 export default function NavBar() {
+  const router = useRouter();
+  const { ready, authenticated, login, logout } = usePrivy();
   const { isCollapsed, setIsCollapsed, index } = useGlobalContext();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
-  const { isOpen, onClose, onOpen } = useDisclosure();
-  const router = useRouter();
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorTitle, setErrorTitle] = useState("");
+  const closeError = () => setIsError(false);
+
+  function logoutWarning() {
+    setIsError(true);
+    setErrorTitle("Are you leaving?");
+    setErrorMessage("You are about to log out");
+  }
 
   return (
     <>
@@ -74,12 +88,21 @@ export default function NavBar() {
               color={"white"}
               bg="#212529"
               h="50px"
+              isDisabled={!ready}
+              onClick={authenticated ? logoutWarning : login}
             >
-              Connect Wallet
+              {authenticated ? "Disconnect" : "  Connect Wallet"}
             </Button>
           </Flex>
         </HStack>
       </Box>
+
+      <ErrorDialog
+        isOpen={isError}
+        onClose={closeError}
+        title={errorTitle}
+        message={errorMessage}
+      />
     </>
   );
 }
