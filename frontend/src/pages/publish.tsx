@@ -42,10 +42,8 @@ import {
 } from "@/utils/helpers";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import ErrorDialog from "@/components/Modals/errorDialog";
-
-import * as LitJsSdk from "@lit-protocol/lit-node-client";
+import LitJsSdk from "@lit-protocol/lit-node-client";
 import { ethConnect } from "@lit-protocol/auth-browser";
-
 import {
   deployNFTContract,
   encryptFileWithLitProtocol,

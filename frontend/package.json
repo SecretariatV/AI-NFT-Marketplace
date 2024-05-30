@@ -19,7 +19,6 @@
     "@lit-protocol/auth-browser": "^5.1.0",
     "@lit-protocol/lit-node-client": "^5.1.0",
     "@privy-io/react-auth": "^1.66.2",
-    "ethers": "^5.7.2",
     "framer-motion": "^11.2.6",
     "graphql": "^16.8.1",
     "mammoth": "^1.7.2",

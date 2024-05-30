@@ -1,7 +1,6 @@
 import mammoth from "mammoth";
-import { parseEther, createPublicClient, http, Address, toBytes } from "viem";
+import { parseEther, createPublicClient, http, Address, } from "viem";
 import { sepolia } from "viem/chains";
-import PayableNFT from "./NFT.json";
 import NFTFactory from "./NFTFactory.json";
 
 /**
