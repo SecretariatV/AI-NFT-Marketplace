@@ -42,7 +42,7 @@ import {
 } from "@/utils/helpers";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import ErrorDialog from "@/components/Modals/errorDialog";
-import LitJsSdk from "@lit-protocol/lit-node-client";
+import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { ethConnect } from "@lit-protocol/auth-browser";
 import {
   deployNFTContract,
@@ -173,7 +173,10 @@ const PublishPage = () => {
 
     const metaDataCID = await uploadMetadata(metadata);
 
+    console.log("metaData CID", metaDataCID);
+
     const updateResponse = await updateNFTCID(
+      predictedNFTAddress,
       metaDataCID,
       ownerAddress,
       provider
@@ -182,7 +185,7 @@ const PublishPage = () => {
   };
 
   const handleDecrypt = async () => {
-    const litNodeClient = new LitJsSdk.LitNodeClient({
+    const litNodeClient = new LitJsSdk.LitNodeClientNodeJs({
       litNetwork: "cayenne",
     });
     await litNodeClient.connect();
@@ -433,6 +436,7 @@ const PublishPage = () => {
                       color={"white"}
                     >
                       <option value="food">food</option>
+                      <option value="health">health</option>
                     </Select>
                   </Box>
                 </FormControl>

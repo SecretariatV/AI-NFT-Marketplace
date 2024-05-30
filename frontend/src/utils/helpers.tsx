@@ -1,7 +1,8 @@
 import mammoth from "mammoth";
-import { parseEther, createPublicClient, http, Address, } from "viem";
+import { parseEther, createPublicClient, http, Address } from "viem";
 import { sepolia } from "viem/chains";
 import NFTFactory from "./NFTFactory.json";
+import NFT from "./NFT.json";
 
 /**
  * Shortens an Ethereum address to a more readable format.
@@ -63,4 +64,50 @@ export const computeCreate2Address = async (
   console.log("computed address: ", data);
 
   return data as string;
+};
+
+export const getDetailsFromNFTContract = async (nftAddress: string) => {
+  let data;
+  try {
+    const publicClient = createPublicClient({
+      chain: sepolia,
+      transport: http(),
+    });
+
+    const nftContract = {
+      address: nftAddress as `0x${string}`,
+      abi: NFT.abi,
+    };
+
+    const [mintPrice, tokenCounter, author, cid] = await Promise.all([
+      publicClient.readContract({
+        ...nftContract,
+        functionName: "mintPrice",
+      }),
+      publicClient.readContract({
+        ...nftContract,
+        functionName: "tokenCounter",
+      }),
+      publicClient.readContract({
+        ...nftContract,
+        functionName: "authorAddress",
+      }),
+      publicClient.readContract({
+        ...nftContract,
+        functionName: "cid",
+      }),
+    ]);
+
+    data = {
+      mintPrice,
+      tokenCounter,
+      author,
+      cid,
+    };
+  } catch (error) {
+    console.error("Error fetching CID:", error);
+    return null;
+  }
+
+  return data
 };

@@ -1,42 +1,25 @@
-import { useState } from "react";
-import {
-  Avatar,
-  Box,
-  Button,
-  Center,
-  HStack,
-  Text,
-  Divider,
-  Flex,
-  Stack,
-} from "@chakra-ui/react";
-import { MdTrendingUp } from "react-icons/md";
-import {
-  FaHamburger,
-  FaFilter,
-  FaHeartbeat,
-  FaDumbbell,
-  FaPlane,
-  FaBitcoin,
-  FaGlobe,
-  FaUser,
-  FaPlay,
-} from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { Box, Button } from "@chakra-ui/react";
 import { useGlobalContext } from "@/contexts/GlobalContext";
-import Headers from "@/components/Headers";
+
 import MarketplaceHeader from "./MarketPlaceHeader";
 import Overview from "./Overview";
 import { BiStore } from "react-icons/bi";
 import Results from "./Results";
 
+
 export default function Marketplace() {
-  const { index } = useGlobalContext();
+  const { index, nftData, setNftData } = useGlobalContext();
   const [tabIndex, setTabIndex] = useState(0);
 
   return (
     <>
       <MarketplaceHeader tabIndex={tabIndex} setTabIndex={setTabIndex} />
-      {!tabIndex && <><Overview /></>}
+      {!tabIndex && (
+        <>
+          <Overview />
+        </>
+      )}
 
       {tabIndex && (
         <>

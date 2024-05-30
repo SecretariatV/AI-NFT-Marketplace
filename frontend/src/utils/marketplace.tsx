@@ -7,7 +7,9 @@ import { ethConnect } from "@lit-protocol/lit-node-client";
 import lighthouse from "@lighthouse-web3/sdk";
 
 export const getlitNodeClient = async () => {
-  const litNodeClient = new LitJsSdk.LitNodeClient({ litNetwork: "cayenne" });
+  const litNodeClient = new LitJsSdk.LitNodeClientNodeJs({
+    litNetwork: "cayenne",
+  });
   await litNodeClient.connect();
   return litNodeClient;
 };
@@ -131,20 +133,20 @@ export const uploadMetadata = async (metadata: any) => {
 };
 
 export const updateNFTCID = async (
+  nftContract: string,
   metaDataCID: string,
   ownerAddress: string,
   provider: any,
   smartAccount?: any
 ) => {
-  const nftFactoryAddress = process.env.NEXT_PUBLIC_NFTFACTORY_ADDRESS;
   const updateNFTCallData = encodeFunctionData({
     abi: NFT.abi,
     functionName: "setCID",
     args: [metaDataCID],
   });
   const transaction = {
-    to: nftFactoryAddress,
-    from: ownerAddress,
+    to: nftContract,
+    // from: ownerAddress,
     data: updateNFTCallData,
   };
 

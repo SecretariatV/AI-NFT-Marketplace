@@ -1,8 +1,8 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_NFT_DEPLOYED = gql`
   query GetNFTDeployed($first: Int) {
-    nftdeployeds(first: $first) {
+    nftdeployeds(first: $first, orderBy: blockNumber, orderDirection: desc) {
       id
       nftAddress
       owner

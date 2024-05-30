@@ -1,26 +1,5 @@
-import { useState } from "react";
-import {
-  Avatar,
-  Box,
-  Button,
-  Center,
-  HStack,
-  Text,
-  Divider,
-  Flex,
-  Stack,
-} from "@chakra-ui/react";
-import {
-  FaHamburger,
-  FaFilter,
-  FaHeartbeat,
-  FaDumbbell,
-  FaPlane,
-  FaBitcoin,
-  FaGlobe,
-  FaPlay,
-  FaUser,
-} from "react-icons/fa";
+import { Box, Text, Flex, Stack } from "@chakra-ui/react";
+import { FaPlay, FaUser } from "react-icons/fa";
 import Headers from "@/components/Headers";
 import { MdTrendingUp } from "react-icons/md";
 import { useRouter } from "next/router";
