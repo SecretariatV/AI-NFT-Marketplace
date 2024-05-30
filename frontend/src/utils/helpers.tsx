@@ -1,8 +1,8 @@
 import mammoth from "mammoth";
 import { parseEther, createPublicClient, http, Address, toBytes } from "viem";
 import { sepolia } from "viem/chains";
-import * as PayableNFT from "./NFT.json";
-import * as NFTFactory from "./NFTFactory.json";
+import PayableNFT from "./NFT.json";
+import NFTFactory from "./NFTFactory.json";
 
 /**
  * Shortens an Ethereum address to a more readable format.

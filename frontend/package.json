@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.10.4",
     "@biconomy/account": "^4.4.4",
     "@chakra-ui/next-js": "^2.2.0",
     "@chakra-ui/react": "^2.8.2",
@@ -20,12 +21,12 @@
     "@privy-io/react-auth": "^1.66.2",
     "ethers": "^5.7.2",
     "framer-motion": "^11.2.6",
+    "graphql": "^16.8.1",
     "mammoth": "^1.7.2",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
-    "siwe": "^2.3.2",
     "viem": "^2.13.1"
   },
   "devDependencies": {

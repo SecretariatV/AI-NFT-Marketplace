@@ -1,7 +1,7 @@
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { encodeFunctionData, getAddress, parseEther } from "viem";
-import * as NFTFactory from "@/utils/NFTFactory.json";
-import * as NFT from "@/utils/NFT.json";
+import NFTFactory from "@/utils/NFTFactory.json";
+import NFT from "@/utils/NFT.json";
 import { PaymasterMode } from "@biconomy/account";
 import { ethConnect } from "@lit-protocol/lit-node-client";
 import lighthouse from "@lighthouse-web3/sdk";
