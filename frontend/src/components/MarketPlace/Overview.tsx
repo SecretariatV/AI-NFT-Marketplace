@@ -1,11 +1,15 @@
-import { Box, Text, Flex, Stack } from "@chakra-ui/react";
+import { Box, Text, Flex, Stack, HStack } from "@chakra-ui/react";
 import { FaPlay, FaUser } from "react-icons/fa";
 import Headers from "@/components/Headers";
 import { MdTrendingUp } from "react-icons/md";
 import { useRouter } from "next/router";
+import { useGlobalContext } from "@/contexts/GlobalContext";
+import PreviewCard from "./PreviewCard";
 
 export default function Overview() {
+  const { index, nftData, loadingMarket, setNftData } = useGlobalContext();
   const router = useRouter();
+
   return (
     <>
       <Box
@@ -16,11 +20,23 @@ export default function Overview() {
         color={"lightgreen"}
         borderRadius={"18px"}
       >
-        <Headers
-          icon={<MdTrendingUp size={"lg"} />}
-          title="Trending"
-          bg="#1e1f23"
-        />
+        {!loadingMarket && nftData && nftData.length > 0 && (
+          <>
+            <Headers
+              icon={<MdTrendingUp size={"lg"} />}
+              title="Recently created"
+              bg="#1e1f23"
+            />
+
+            <HStack w="100%" spacing={5}>
+              {nftData
+                .filter((item: any) => item.cid.length > 0)
+                .map((nft: any, i: number) => (
+                  <PreviewCard key={i} nft={nft} />
+                ))}
+            </HStack>
+          </>
+        )}
       </Box>
 
       <Stack mt={4} spacing={4} direction={["column", "row", "row"]}>

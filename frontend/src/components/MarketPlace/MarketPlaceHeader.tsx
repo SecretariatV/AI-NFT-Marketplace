@@ -10,15 +10,8 @@ import {
   Flex,
   Stack,
 } from "@chakra-ui/react";
-import {
-  FaHamburger,
-  FaFilter,
-  FaHeartbeat,
-  FaDumbbell,
-  FaPlane,
-  FaBitcoin,
-  FaGlobe,
-} from "react-icons/fa";
+import { FaFilter } from "react-icons/fa";
+import { categories } from "./categories";
 
 export default function MarketplaceHeader({
   tabIndex,
@@ -27,33 +20,6 @@ export default function MarketplaceHeader({
   tabIndex: number;
   setTabIndex: any;
 }) {
-  const categories = [
-    {
-      title: "Food",
-      icon: <FaHamburger />,
-    },
-    {
-      title: "Health",
-      icon: <FaHeartbeat />,
-    },
-    {
-      title: "Fitness",
-      icon: <FaDumbbell />,
-    },
-    {
-      title: "Travel",
-      icon: <FaPlane />,
-    },
-    {
-      title: "Crypto",
-      icon: <FaBitcoin />,
-    },
-    {
-      title: "Culture",
-      icon: <FaGlobe />,
-    },
-  ];
-
   return (
     <>
       <Box

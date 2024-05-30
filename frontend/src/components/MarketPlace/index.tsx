@@ -6,11 +6,36 @@ import MarketplaceHeader from "./MarketPlaceHeader";
 import Overview from "./Overview";
 import { BiStore } from "react-icons/bi";
 import Results from "./Results";
-
+import { categories } from "./categories";
 
 export default function Marketplace() {
-  const { index, nftData, setNftData } = useGlobalContext();
+  const { index, nftData, setNftData, loadingMarket } = useGlobalContext();
   const [tabIndex, setTabIndex] = useState(0);
+  const [searching, setSearching] = useState(false);
+  const [filtered, setFiltered] = useState<any | null>(null);
+
+  const resetFilter = () => {
+    setFiltered(null);
+    setSearching(true);
+  };
+
+  useEffect(() => {
+    function filterNFTs() {
+      const value = categories[tabIndex - 1].title;
+      const filter = nftData.filter(
+        (nft: any) =>
+          nft.metadata?.category.toLowerCase() === value.toLowerCase()
+      );
+      if (filter) {
+        setFiltered(filter);
+      }
+      setSearching(false);
+    }
+
+    if (nftData && tabIndex && searching) {
+      // filterNFTs;
+    }
+  }, [tabIndex, searching, nftData]);
 
   return (
     <>
@@ -43,7 +68,12 @@ export default function Marketplace() {
           </Button>
 
           <Box mt={8}>
-            <Results />
+            {filtered && (
+              <>
+                {" "}
+                <Results />
+              </>
+            )}
           </Box>
         </>
       )}

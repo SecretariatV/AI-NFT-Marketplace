@@ -1,16 +1,12 @@
 import {
   Avatar,
   Box,
-  Button,
   Center,
   HStack,
   Text,
   Divider,
   Flex,
 } from "@chakra-ui/react";
-import { useGlobalContext } from "@/contexts/GlobalContext";
-import Layout from "@/layout";
-import { FaRobot } from "react-icons/fa";
 import { MdDescription, MdFolder, MdPublic } from "react-icons/md";
 import { shortenAddress } from "@/utils/helpers";
 

@@ -24,6 +24,7 @@ interface GlobalContextType {
   setIndex: (index: number) => void;
   nftData: null | any[] | any;
   setNftData: (index: null | any[] | any) => void;
+  loadingMarket: boolean;
   smartAccountClient: () => Promise<BiconomySmartAccountV2 | undefined>;
 }
 
@@ -38,7 +39,11 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
   const { ready, authenticated, login } = usePrivy();
   const { wallets } = useWallets();
 
-  const { loading, error, data } = useQuery(GET_NFT_DEPLOYED, {
+  const {
+    loading: loadingMarket,
+    error,
+    data,
+  } = useQuery(GET_NFT_DEPLOYED, {
     variables: { first: 5 },
     client,
   });
@@ -62,12 +67,19 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
           }
         })
       );
-      console.log("details data", detailedData);
-      setNftData(detailedData.filter((item) => item !== null));
+      if (detailedData && detailedData.length > 4) {
+        // console.log("details data", detailedData);
+        // setNftData(detailedData);
+        setNftData(detailedData.filter((item) => item !== null));
+      }
     };
 
     if (data && !nftData) {
       fetchNFTDetails();
+    }
+
+    if (nftData) {
+      console.log("nft data", nftData);
     }
   }, [data, nftData]);
 
@@ -110,6 +122,7 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
         index,
         setIndex,
         nftData,
+        loadingMarket,
         setNftData,
         smartAccountClient,
       }}
