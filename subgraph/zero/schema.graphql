@@ -1,0 +1,8 @@
+type NFTDeployed @entity(immutable: true) {
+  id: Bytes!
+  nftAddress: Bytes! # address
+  owner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
