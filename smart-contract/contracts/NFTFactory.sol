@@ -1,30 +1,42 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "./NFT.sol";
+import "./PayableNFT.sol";
+import {Create2} from "@openzeppelin/contracts/utils/Create2.sol";
 
 contract NFTFactory {
-    event NFTCreated(address nftAddress);
-    mapping(address => address[]) public ownerToContracts;
+    event NFTDeployed(
+        address indexed nftAddress,
+        address indexed owner,
+        string indexed cid
+    );
 
-    function deployNFT(uint256 _mintPrice, bytes32 _salt) public {
-        PayableNFT newNFT = new PayableNFT{salt: _salt}(_mintPrice);
-        emit NFTCreated(address(newNFT));
-    }
-
-    function computeAddress(
+    function deployNFT(
+        string memory cid,
+        address owner,
         uint256 _mintPrice,
-        bytes32 _salt
-    ) public view returns (address) {
-        bytes memory bytecode = type(PayableNFT).creationCode;
-        bytes32 hash = keccak256(
-            abi.encodePacked(
-                bytes1(0xff),
-                address(this),
-                _salt,
-                keccak256(abi.encodePacked(bytecode, _mintPrice))
-            )
+        bytes32 _nounce
+    ) public {
+        bytes memory bytecode = abi.encodePacked(
+            type(PayableNFT).creationCode,
+            abi.encode(_mintPrice, owner, cid)
         );
-        return address(uint160(uint256(hash)));
+        address newNFTAddress = Create2.deploy(0, _nounce, bytecode);
+        emit NFTDeployed(address(newNFTAddress), owner, cid);
     }
+
+     function computeAddress(
+        uint256 _mintPrice,
+        address owner,
+        string memory cid,
+        bytes32 _nounce
+    ) public view returns (address) {
+        bytes memory bytecode = abi.encodePacked(
+            type(PayableNFT).creationCode,
+            abi.encode(_mintPrice, owner, cid)
+        );
+        return Create2.computeAddress(_nounce, keccak256(bytecode));
+    }
+
+  
 }
