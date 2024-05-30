@@ -59,9 +59,6 @@ dependencies:
   react-icons:
     specifier: ^5.2.1
     version: 5.2.1(react@18.3.1)
-  siwe:
-    specifier: ^2.3.2
-    version: 2.3.2(ethers@5.7.2)
   viem:
     specifier: ^2.13.1
     version: 2.13.1(typescript@5.4.5)
