@@ -30,9 +30,9 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
       console.error("not authenticated");
       return;
     }
-    const signer = await walletClient();
+    const provider = await walletClient();
     return await createSmartAccountClient({
-      signer: signer as LightSigner,
+      signer: provider?.getSigner() as LightSigner,
       chainId: sepolia.id,
       bundlerUrl: `https://bundler.biconomy.io/api/v2/${sepolia.id}/${
         process.env.NEXT_PUBLIC_BUNDLER_ID as string
@@ -44,16 +44,16 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
 
   async function walletClient() {
     const embeddedWallet = wallets.find(
-      (wallet) => wallet.walletClientType === "privy"
+      (wallet) => wallet.walletClientType !== "privy"
     );
 
     if (!embeddedWallet) {
       console.log("no embedded wallet wound");
       return;
     }
-    await embeddedWallet.switchChain(80002);
+    await embeddedWallet.switchChain(sepolia.id);
     const provider = await embeddedWallet.getEthersProvider();
-    return provider.getSigner();
+    return provider;
   }
 
   return (

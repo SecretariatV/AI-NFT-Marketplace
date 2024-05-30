@@ -15,14 +15,17 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@lighthouse-web3/sdk": "^0.3.3",
+    "@lit-protocol/auth-browser": "^5.1.0",
     "@lit-protocol/lit-node-client": "^5.1.0",
     "@privy-io/react-auth": "^1.66.2",
+    "ethers": "^5.7.2",
     "framer-motion": "^11.2.6",
     "mammoth": "^1.7.2",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
+    "siwe": "^2.3.2",
     "viem": "^2.13.1"
   },
   "devDependencies": {

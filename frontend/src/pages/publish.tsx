@@ -29,22 +29,45 @@ import {
   Center,
   InputRightElement,
   InputRightAddon,
+  Select,
 } from "@chakra-ui/react";
-import { FaChevronLeft, FaPlus, FaMinus } from "react-icons/fa";
 import { useRouter } from "next/router";
-import { MdAttachMoney, MdPhotoLibrary } from "react-icons/md";
+import { useWallets, usePrivy } from "@privy-io/react-auth";
+import { FaChevronLeft, FaPlus, FaMinus } from "react-icons/fa";
+import { MdPhotoLibrary } from "react-icons/md";
+import {
+  computeCreate2Address,
+  extractTextFromFile,
+  fetchContent,
+} from "@/utils/helpers";
+import { useGlobalContext } from "@/contexts/GlobalContext";
 import ErrorDialog from "@/components/Modals/errorDialog";
-import { extractTextFromFile } from "@/utils/helpers";
-import lighthouse from "@lighthouse-web3/sdk";
+
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
+import { ethConnect } from "@lit-protocol/auth-browser";
+
+import {
+  deployNFTContract,
+  encryptFileWithLitProtocol,
+  getAuthSig,
+  getlitNodeClient,
+  updateNFTCID,
+  uploadEncryptedFile,
+  uploadMetadata,
+} from "@/utils/marketplace";
+import { sepolia } from "viem/chains";
 
 const PublishPage = () => {
   const router = useRouter();
+  const { wallets } = useWallets();
+  // const { sendTransaction } = usePrivy();
+  const { smartAccountClient } = useGlobalContext();
   const [isOpen, setIsOpen] = useState(true);
   const [file, setFile] = useState<File | null>(null);
   const [fileContent, setFileContent] = useState<any>(null);
   const [nftTitle, setNftTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
   const [price, setPrice] = useState(0);
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [termsChecked, setTermsChecked] = useState(false);
@@ -52,6 +75,10 @@ const PublishPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [errorTitle, setErrorTitle] = useState("");
   const closeError = () => setIsError(false);
+  const embeddedWallet = wallets.find(
+    (wallet) => wallet.walletClientType !== "privy"
+  );
+  console.log("embedded wallet", wallets);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -95,77 +122,111 @@ const PublishPage = () => {
   //     }
   //   };
 
-  const handleSubmit = async () => {
-    console.log("Submit:", {
-      file,
-      nftTitle,
-      description,
-      price,
-      coverImage,
-      termsChecked,
-    });
-    // Add encryption, minting, and smart contract interaction here
-    //upload file content to lighthouse
-    const content = localStorage.getItem("savedDocument");
-    if (!content) {
-      console.log("please reupload  document");
+  const publish = async () => {
+    if (!file) {
+      console.log("please upload a valid document");
       return;
     }
-    const response = await lighthouse.uploadText(
-      content as string,
-      process.env.LIGHTHOUSE_API_KEY as string
+
+    const smartAccount = await smartAccountClient();
+    const ownerAddress = embeddedWallet?.address!;
+    const provider = await embeddedWallet?.getEthereumProvider();
+    const litNodeClient = await getlitNodeClient();
+    const nonce = await litNodeClient.getLatestBlockhash();
+
+    console.log(ownerAddress);
+    const predictedNFTAddress = await computeCreate2Address(
+      ownerAddress,
+      "0.0001",
+      nonce
     );
-    console.log(response);
-    const documentID = response.data.Hash;
 
-    //encrypt this document ID on lit protocol
+    const deployResponse = await deployNFTContract(
+      ownerAddress,
+      nonce,
+      provider
+    );
 
-    // Create our litNodeClient
+    if (!deployResponse) {
+      console.log("Could not deploy NFT contract");
+      return;
+    }
+
+    const authSig = await getAuthSig(
+      await embeddedWallet?.getEthersProvider(),
+      ownerAddress,
+      sepolia.id.toString(),
+      nonce
+    );
+
+    const encryptedJSON = await encryptFileWithLitProtocol(
+      authSig,
+      ownerAddress,
+      predictedNFTAddress,
+      litNodeClient,
+      file
+    );
+
+    const metadata = await uploadEncryptedFile(encryptedJSON, ownerAddress, {
+      nftTitle,
+      description,
+      category,
+    });
+
+    const metaDataCID = await uploadMetadata(metadata);
+
+    const updateResponse = await updateNFTCID(
+      metaDataCID,
+      ownerAddress,
+      provider
+    );
+    console.log(updateResponse);
+  };
+
+  const handleDecrypt = async () => {
     const litNodeClient = new LitJsSdk.LitNodeClient({
       litNetwork: "cayenne",
     });
-
     await litNodeClient.connect();
 
-    await litNodeClient.connect();
-    const authSig = await LitJsSdk.checkAndSignAuthMessage({
-      chain: "ethereum",
-      nonce: LitJsSdk.LitNodeClient.getExpiration(),
+    const provider = await embeddedWallet?.getEthersProvider();
+
+    const authSig = await ethConnect.signAndSaveAuthMessage({
+      web3: provider!,
+      account: embeddedWallet?.address!,
+      chainId: 1,
+      expiration: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
+      resources: [],
+      nonce: await litNodeClient.getLatestBlockhash(),
     });
 
-    //lit access condition
-    const accessControlConditions = [
-      {
-        contractAddress: "",
-        standardContractType: "",
-        chain: "ethereum",
-        method: "",
-        parameters: [":userAddress"],
-        returnValueTest: {
-          comparator: "=",
-          value: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
-        },
-      },
-      { operator: "or" },
-      {
-        contractAddress: "0xA80617371A5f511Bf4c1dDf822E6040acaa63e71",
-        standardContractType: "ERC721",
-        chain: "sepolia",
-        method: "balanceOf",
-        parameters: [":userAddress"],
-        returnValueTest: {
-          comparator: ">",
-          value: "0",
-        },
-      },
-    ];
+    //let us decrypt
+    const recoveredJSON = await fetchContent(
+      "QmNmkw4xTMTTqxSfLo9CbNDMQswJpdsYQsnpqYccFbAo2J"
+    );
+    console.log(recoveredJSON);
 
-    //now use this to build the metadata object
-    const metadata = {
-      document: documentID,
-      title: nftTitle,
-      description,
-    };
+    const decryptedFile = await LitJsSdk.decryptFromJson({
+      authSig: authSig,
+      litNodeClient: litNodeClient,
+      parsedJsonData: recoveredJSON,
+    });
+
+    console.log(decryptedFile);
+    if (decryptedFile) {
+      const fileBlob = new Blob([decryptedFile]);
+      const file = new File([fileBlob], "decrypted.docx");
+
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const content = reader.result as ArrayBuffer;
+        const textContent = await extractTextFromFile(content);
+        console.log(textContent);
+        setFileContent(textContent);
+      };
+      reader.readAsArrayBuffer(file);
+    }
+    return;
   };
 
   return (
@@ -361,6 +422,35 @@ const PublishPage = () => {
                       position={"absolute"}
                       fontSize={"xs"}
                     >
+                      Category
+                    </Box>
+                    <Select
+                      w="100%"
+                      borderRadius={"8px"}
+                      border={"1px solid #3d3d3d"}
+                      h="60px"
+                      value={category}
+                      placeholder="Choose"
+                      onChange={(e) => setCategory(e.target.value)}
+                      color={"white"}
+                    >
+                      <option value="food">food</option>
+                    </Select>
+                  </Box>
+                </FormControl>
+
+                <FormControl>
+                  <Box position={"relative"} w="100%">
+                    <Box
+                      zIndex={1}
+                      mt={-2}
+                      ml={3}
+                      bg="#1f2022"
+                      px={2}
+                      top={0}
+                      position={"absolute"}
+                      fontSize={"xs"}
+                    >
                       Price ($)
                     </Box>
                     <NumberInput
@@ -457,7 +547,7 @@ const PublishPage = () => {
                 h="60px"
                 bgGradient="linear(to-r, #D968D0, #EB4634)"
                 colorScheme="purple"
-                onClick={handleSubmit}
+                onClick={publish}
                 fontSize={"xl"}
               >
                 Mint
@@ -476,5 +566,7 @@ const PublishPage = () => {
     </Slide>
   );
 };
+
+// 0x9ca110dd64C94613e10B1ba62B4594FD8165c96a
 
 export default PublishPage;

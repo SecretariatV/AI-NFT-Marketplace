@@ -6,7 +6,6 @@ import {
   IconButton,
   useMediaQuery,
   Flex,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { MdAttachMoney, MdChevronLeft } from "react-icons/md";
@@ -78,7 +77,8 @@ export default function NavBar() {
                 h="50px"
                 colorScheme="purple"
                 leftIcon={<MdAttachMoney />}
-                onClick={() => router.push("/publish")}
+                onClick={authenticated ?  () => router.push("/publish") : login}
+
               >
                 Start Selling
               </Button>
@@ -87,6 +87,14 @@ export default function NavBar() {
               display={!isCollapsed && isMobile ? "none" : "block"}
               color={"white"}
               bg="#212529"
+              _hover={{
+                bg: "#212529",
+                color: "white"
+              }}
+              _active={{
+                bg: "#212529",
+                color: "white"
+              }}
               h="50px"
               isDisabled={!ready}
               onClick={authenticated ? logoutWarning : login}
