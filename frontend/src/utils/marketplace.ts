@@ -78,7 +78,7 @@ export const encryptFileWithLitProtocol = async (
     {
       contractAddress: "",
       standardContractType: "",
-      chain: "ethereum",
+      chain: "sepolia",
       method: "",
       parameters: [":userAddress"],
       returnValueTest: { comparator: "=", value: ownerAddress },
@@ -95,6 +95,7 @@ export const encryptFileWithLitProtocol = async (
   ];
 
   return await LitJsSdk.encryptToJson({
+    //@ts-ignore
     accessControlConditions,
     authSig: authSig,
     chain: "sepolia",
