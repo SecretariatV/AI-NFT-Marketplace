@@ -16,6 +16,7 @@ import { useQuery } from "@apollo/client";
 import client from "@/utils/apollo-client";
 import { GET_NFT_DEPLOYED } from "@/utils/queries";
 import { fetchContent, getDetailsFromNFTContract } from "@/utils/helpers";
+import { useDisclosure } from "@chakra-ui/react";
 
 interface GlobalContextType {
   isCollapsed: boolean;
@@ -26,6 +27,9 @@ interface GlobalContextType {
   setNftData: (index: null | any[] | any) => void;
   loadingMarket: boolean;
   smartAccountClient: () => Promise<BiconomySmartAccountV2 | undefined>;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -37,6 +41,7 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
   const [index, setIndex] = useState<number>(0);
   const [nftData, setNftData] = useState<null | any[] | any>(null);
   const { ready, authenticated, login } = usePrivy();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { wallets } = useWallets();
 
   const {
@@ -125,6 +130,9 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
         loadingMarket,
         setNftData,
         smartAccountClient,
+        isOpen,
+        onOpen,
+        onClose,
       }}
     >
       {children}

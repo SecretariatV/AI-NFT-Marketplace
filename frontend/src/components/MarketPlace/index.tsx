@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Center, Spinner, Text } from "@chakra-ui/react";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 
 import MarketplaceHeader from "./MarketPlaceHeader";
@@ -22,24 +22,31 @@ export default function Marketplace() {
   useEffect(() => {
     function filterNFTs() {
       const value = categories[tabIndex - 1].title;
+
       const filter = nftData.filter(
         (nft: any) =>
           nft.metadata?.category.toLowerCase() === value.toLowerCase()
       );
+
+      console.log("new value", filter);
       if (filter) {
         setFiltered(filter);
       }
       setSearching(false);
     }
 
-    if (nftData && tabIndex && searching) {
-      // filterNFTs;
+    if (nftData && nftData.length > 0 && tabIndex && searching) {
+      filterNFTs();
     }
   }, [tabIndex, searching, nftData]);
 
   return (
     <>
-      <MarketplaceHeader tabIndex={tabIndex} setTabIndex={setTabIndex} />
+      <MarketplaceHeader
+        tabIndex={tabIndex}
+        reset={resetFilter}
+        setTabIndex={setTabIndex}
+      />
       {!tabIndex && (
         <>
           <Overview />
@@ -62,16 +69,37 @@ export default function Marketplace() {
             leftIcon={<BiStore />}
             h="50px"
             colorScheme="gray"
-            onClick={() => setTabIndex(0)}
+            onClick={() => {
+              setFiltered(null);
+              setSearching(false);
+              setTabIndex(0);
+            }}
           >
             Return
           </Button>
 
           <Box mt={8}>
+            {searching && (
+              <Center>
+                <Spinner />
+              </Center>
+            )}
+
             {filtered && (
               <>
-                {" "}
-                <Results />
+                {filtered.length > 0 ? (
+                  filtered.map((nft: any, i: number) => (
+                    <Results key={i} nft={nft} />
+                  ))
+                ) : (
+                  <Box>
+                    <Center>
+                      <Text fontSize="xs">
+                        Be the fist to publish in this category
+                      </Text>
+                    </Center>
+                  </Box>
+                )}
               </>
             )}
           </Box>

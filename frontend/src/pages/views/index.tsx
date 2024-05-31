@@ -1,18 +1,21 @@
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import Layout from "@/layout";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
-import MyViews from "@/components/Views";
 
 export default function Views() {
-  const { index, setIndex } = useGlobalContext();
+  const router = useRouter();
+  const { setIndex } = useGlobalContext();
 
   useEffect(() => {
     setIndex(1);
+    router.push("/");
   }, []);
 
   return (
     <Layout>
-      <MyViews />
+      {/* <MyViews /> */}
+      <div>redirecting...</div>
     </Layout>
   );
 }

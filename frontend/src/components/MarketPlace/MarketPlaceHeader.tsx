@@ -16,9 +16,11 @@ import { categories } from "./categories";
 export default function MarketplaceHeader({
   tabIndex,
   setTabIndex,
+  reset,
 }: {
   tabIndex: number;
   setTabIndex: any;
+  reset: () => void;
 }) {
   return (
     <>
@@ -75,7 +77,10 @@ export default function MarketplaceHeader({
                 alignItems="center"
                 mb={4}
                 cursor={"pointer"}
-                onClick={() => setTabIndex(i + 1)}
+                onClick={() => {
+                  setTabIndex(i + 1);
+                  reset();
+                }}
               >
                 <Avatar
                   icon={category.icon}

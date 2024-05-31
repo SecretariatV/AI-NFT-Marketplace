@@ -108,16 +108,27 @@ export const uploadEncryptedFile = async (
   authorAddress: string,
   data?: any
 ) => {
+  let thumbnail;
+
+  //upload encrypted JSON
   const response = await lighthouse.uploadText(
     encryptedJSON,
     process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY as string
   );
 
+  if (data && data.coverImage?.length > 2) {
+    //upload thumbnail
+    const response2 = await lighthouse.uploadText(
+      data.coverImage,
+      process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY as string
+    );
+    thumbnail = response2.data.Hash;
+  }
   return {
     document: response.data.Hash,
     title: data.nftTitle || "",
     description: data.description || "",
-    thumbnail: "",
+    thumbnail: thumbnail || "",
     publishedAt: Date.now(),
     category: data.category || "",
     author: authorAddress,
@@ -146,7 +157,7 @@ export const updateNFTCID = async (
   });
   const transaction = {
     to: nftContract,
-    // from: ownerAddress,
+    from: ownerAddress,
     data: updateNFTCallData,
   };
 
@@ -163,4 +174,31 @@ export const updateNFTCID = async (
   });
 
   return await smartAccount.sendUserOp(op);
+};
+
+export const generateImage = async (prompt: string) => {
+  let imageURL;
+
+  try {
+    const response = await fetch("/api/stability", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        story: prompt,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    imageURL = `data:image/png;base64,${data.image}`;
+
+    return imageURL;
+  } catch (e) {
+    console.log("error generating imgge", e);
+  }
 };

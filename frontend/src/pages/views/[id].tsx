@@ -1,12 +1,10 @@
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import Layout from "@/layout";
 import { useEffect } from "react";
-import MyViews from "@/components/Views";
-import { useRouter } from "next/router";
+import ViewData from "@/components/ViewData";
 
 export default function ViewPage() {
-  const { index, setIndex } = useGlobalContext();
-  const router = useRouter();
+  const { setIndex } = useGlobalContext();
 
   useEffect(() => {
     setIndex(1);
@@ -14,7 +12,7 @@ export default function ViewPage() {
 
   return (
     <Layout>
-      <MyViews />
+      <ViewData />
     </Layout>
   );
 }

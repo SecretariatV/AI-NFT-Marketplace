@@ -28,11 +28,11 @@ export default function AgentsCard({
         flexDir={"column"}
         bg="#181818"
         h="400px"
-
         alignItems={"space-between"}
         color={"white"}
         borderRadius={"18px"}
-        w={["100%", "100%", "35%"]}
+        w="100%"
+        maxW="280px"
       >
         <Box>
           <Center mt={5}>

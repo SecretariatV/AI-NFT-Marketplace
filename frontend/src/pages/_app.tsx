@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
       config={{
         loginMethods: ["google", "email"],
         appearance: {
-          theme: "light",
+          theme: "dark",
           accentColor: "#676FFF",
           logo: "http://localhost:3000/vercel.svg",
         },
@@ -19,8 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
           createOnLogin: "users-without-wallets",
           noPromptOnSignature: false,
         },
-        // walletConnectCloudProjectId: ""
-        
+        walletConnectCloudProjectId: "957c795c4c86e7c46609c0cd4064fa00",
       }}
     >
       <ChakraProvider>
@@ -30,4 +29,10 @@ export default function App({ Component, pageProps }: AppProps) {
       </ChakraProvider>
     </PrivyProvider>
   );
+}
+function configureChains(
+  arg0: any[],
+  arg1: any[]
+): { chains: any; publicClient: any } {
+  throw new Error("Function not implemented.");
 }

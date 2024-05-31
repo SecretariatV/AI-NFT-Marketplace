@@ -30,6 +30,7 @@ import {
   InputRightElement,
   InputRightAddon,
   Select,
+  Spinner,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useWallets, usePrivy } from "@privy-io/react-auth";
@@ -47,6 +48,7 @@ import { ethConnect } from "@lit-protocol/auth-browser";
 import {
   deployNFTContract,
   encryptFileWithLitProtocol,
+  generateImage,
   getAuthSig,
   getlitNodeClient,
   updateNFTCID,
@@ -58,7 +60,6 @@ import { sepolia } from "viem/chains";
 const PublishPage = () => {
   const router = useRouter();
   const { wallets } = useWallets();
-  // const { sendTransaction } = usePrivy();
   const { smartAccountClient } = useGlobalContext();
   const [isOpen, setIsOpen] = useState(true);
   const [file, setFile] = useState<File | null>(null);
@@ -67,16 +68,17 @@ const PublishPage = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState(0);
-  const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [coverImage, setCoverImage] = useState<any | null>(null);
   const [termsChecked, setTermsChecked] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorTitle, setErrorTitle] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const [prompt, setPrompt] = useState("");
   const closeError = () => setIsError(false);
   const embeddedWallet = wallets.find(
     (wallet) => wallet.walletClientType !== "privy"
   );
-  console.log("embedded wallet", wallets);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -169,6 +171,7 @@ const PublishPage = () => {
       nftTitle,
       description,
       category,
+      coverImage
     });
 
     const metaDataCID = await uploadMetadata(metadata);
@@ -184,50 +187,21 @@ const PublishPage = () => {
     console.log(updateResponse);
   };
 
-  const handleDecrypt = async () => {
-    const litNodeClient = new LitJsSdk.LitNodeClientNodeJs({
-      litNetwork: "cayenne",
-    });
-    await litNodeClient.connect();
+  const generateThumbnail = async () => {
+    setGenerating(true);
+    const _prompt = `$${prompt} 
+    
+    please use context to generate a thumbnail of n NFT representing the ${
+      category || ""
+    } document, ${nftTitle}, ${description}
 
-    const provider = await embeddedWallet?.getEthersProvider();
-
-    const authSig = await ethConnect.signAndSaveAuthMessage({
-      web3: provider!,
-      account: embeddedWallet?.address!,
-      chainId: 1,
-      expiration: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
-      resources: [],
-      nonce: await litNodeClient.getLatestBlockhash(),
-    });
-
-    //let us decrypt
-    const recoveredJSON = await fetchContent(
-      "QmNmkw4xTMTTqxSfLo9CbNDMQswJpdsYQsnpqYccFbAo2J"
-    );
-    console.log(recoveredJSON);
-
-    const decryptedFile = await LitJsSdk.decryptFromJson({
-      authSig: authSig,
-      litNodeClient: litNodeClient,
-      parsedJsonData: recoveredJSON,
-    });
-
-    console.log(decryptedFile);
-    if (decryptedFile) {
-      const fileBlob = new Blob([decryptedFile]);
-      const file = new File([fileBlob], "decrypted.docx");
-
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const content = reader.result as ArrayBuffer;
-        const textContent = await extractTextFromFile(content);
-        console.log(textContent);
-        setFileContent(textContent);
-      };
-      reader.readAsArrayBuffer(file);
+    don't add texts to image
+    `;
+    const image = await generateImage(_prompt);
+    if (image) {
+      setGenerating(false);
+      setCoverImage(image);
     }
-    return;
   };
 
   return (
@@ -492,17 +466,27 @@ const PublishPage = () => {
           </Box>
 
           <Box w={["100%", "100%", "50%"]} px={[0, 0, 12]}>
-            <Box h="300px" w="100%" bg="#3d3d3d">
+            <Box
+              h="300px"
+              w="100%"
+              bg={coverImage ? "transparent" : "#3d3d3d"}
+              position={"relative"}
+            >
+              {coverImage && (
+                <Box h="100%" w="100%" as="img" src={coverImage} />
+              )}
               <Center h="100%">
                 <Flex flexDir="column" align="center">
-                  <Text> Thumbnail</Text>
-                  <Button
-                    leftIcon={<MdPhotoLibrary />}
-                    mt={2}
-                    onClick={() => {}}
-                  >
-                    Upload
-                  </Button>
+                  <Box opacity={coverImage ? 0 : 1}>
+                    <Text> Thumbnail</Text>
+                    <Button
+                      leftIcon={<MdPhotoLibrary />}
+                      mt={2}
+                      onClick={() => {}}
+                    >
+                      Upload
+                    </Button>
+                  </Box>
                 </Flex>
               </Center>
             </Box>
@@ -513,20 +497,23 @@ const PublishPage = () => {
                   borderRadius={"8px"}
                   border={"0.5px solid #3d3d3d"}
                   h="100%"
+                  value={prompt}
                   focusBorderColor="#3d3d3d"
                   placeholder="Enter prompt"
+                  onChange={(e) => setPrompt(e.target.value)}
+                  readOnly={generating}
                 />
 
                 <InputRightAddon
                   h="100%"
                   border={"1px solid #1f2022"}
-                  cursor={"pointer"}
-                  //   bg="transparent"
+                  cursor={generating ? "progress" : "pointer"}
                   borderRightRadius={"8px"}
                   bg="#12293d"
                   color="#348fe6"
+                  onClick={!generating ? generateThumbnail : () => {}}
                 >
-                  Generate Image
+                  {generating ? <Spinner /> : "Generate Image"}
                 </InputRightAddon>
               </InputGroup>
             </HStack>

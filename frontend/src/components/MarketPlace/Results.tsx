@@ -11,8 +11,12 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { FaPenFancy } from "react-icons/fa";
+import { shortenAddress } from "@/utils/helpers";
+import { useRouter } from "next/router";
+import { formatEther } from "viem";
 
-export default function Results() {
+export default function Results({ nft }: { nft: any }) {
+  const router = useRouter();
   return (
     <>
       <Box
@@ -21,7 +25,7 @@ export default function Results() {
         gridTemplateColumns={[
           "repeat(1fr, 1",
           "repeat(1fr, 1",
-          "repeat(1fr, 3",
+          "repeat(1fr, 2",
         ]}
       >
         <Box
@@ -30,9 +34,11 @@ export default function Results() {
           bg="#181818"
           color={"white"}
           borderRadius={"18px"}
-          w={["100%", "100%", "35%"]}
+          w="100%"
+          maxW="400px"
           justifyContent={"space-between"}
           cursor={"pointer"}
+          onClick={() => router.push(`/views/${nft.id}`)}
         >
           <Box h="85%">
             <Box
@@ -58,20 +64,22 @@ export default function Results() {
                 >
                   <FaPenFancy />
                 </span>
-                <Text> Augustus Ceaser</Text>
+                <Text ml={2}>{shortenAddress(nft.metadata.author)}</Text>
               </Flex>
             </Box>
             <Text mt={4} px={4} fontSize={"xl"}>
-              Nigerian Cuisine{" "}
+              {nft.metadata.title}
             </Text>
             <Text px={4} fontSize={"sm"} color={"gray"}>
-              Local historical soups and rice menus from...
+              {nft.metadata.description}
             </Text>
           </Box>
 
           <HStack px={4} justifyContent={"space-between"}>
             <Text letterSpacing={"1.25px"} fontSize={"xl"}>
-              0.01ETH
+              {!formatEther(nft.mintPrice.toString)
+                ? "Free"
+                : `${formatEther(nft.mintPrice)} ETH`}
             </Text>
             <Button
               h="50px"

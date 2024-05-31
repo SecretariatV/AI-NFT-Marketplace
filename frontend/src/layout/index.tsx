@@ -1,16 +1,17 @@
-import { Box, useMediaQuery } from "@chakra-ui/react";
+import { Box, useDisclosure, useMediaQuery } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import NavBar from "@/components/NavBar";
 import SideBar from "@/components/SideBar";
+import CreateAgentModal from "@/components/Modals/CreateAgentModal";
 
 export default function Layout({ children }: { children: ReactNode | any }) {
-  const { isCollapsed } = useGlobalContext();
+  const { isCollapsed, isOpen, onOpen, onClose } = useGlobalContext();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   return (
     <>
-      <Box position={"relative"} w="100%" bg="#121212">
+      <Box position={"relative"} w="100%" bg="#121212" zIndex={0}>
         <NavBar />
 
         <SideBar />
@@ -27,6 +28,10 @@ export default function Layout({ children }: { children: ReactNode | any }) {
             <Box py={8}>{children}</Box>
           </Box>
         </Box>
+      </Box>
+
+      <Box position={"absolute"} zIndex={"9999999999999"}>
+        <CreateAgentModal isOpen={isOpen} onClose={onClose} />
       </Box>
     </>
   );
