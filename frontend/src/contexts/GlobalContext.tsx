@@ -29,6 +29,7 @@ interface GlobalContextType {
   index: number;
   setIndex: (index: number) => void;
   nftData: null | any[] | any;
+  agents: null | any[] | any;
   setNftData: (index: null | any[] | any) => void;
   loadingMarket: boolean;
   smartAccountClient: () => Promise<BiconomySmartAccountV2 | undefined>;
@@ -168,6 +169,7 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
         isOpen,
         onOpen,
         onClose,
+        agents,
       }}
     >
       {children}

@@ -41,6 +41,9 @@ dependencies:
   blueband-db:
     specifier: https://github.com/acgodson/blueband.git#main
     version: github.com/acgodson/blueband/e7d759a47dab1d3beafda8823b926d6700e94dee(typescript@5.4.5)
+  ethers:
+    specifier: 5.7.2
+    version: 5.7.2
   framer-motion:
     specifier: ^11.2.6
     version: 11.2.9(react-dom@18.3.1)(react@18.3.1)

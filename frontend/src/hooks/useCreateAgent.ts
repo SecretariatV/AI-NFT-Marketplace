@@ -27,29 +27,30 @@ export const useCreateAgent = () => {
     setSuccess(false);
     setProgress("");
   };
-  useEffect(() => {
-    const ensLookup = async () => {
-      if (!wallets) {
-        return;
-      }
-      try {
-        const publicClient = createPublicClient({
-          chain: mainnet,
-          transport: http(),
-        });
-        if (!publicClient) {
-          return;
-        }
-        const _ensName = await publicClient.getEnsName({
-          address: embeddedWallet?.address! as `0x${string}`,
-        });
-        setEnsName(_ensName);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    ensLookup();
-  }, [wallets, embeddedWallet]);
+
+  // useEffect(() => {
+  //   const ensLookup = async () => {
+  //     if (!wallets) {
+  //       return;
+  //     }
+  //     try {
+  //       const publicClient = createPublicClient({
+  //         chain: mainnet,
+  //         transport: http(),
+  //       });
+  //       if (!publicClient) {
+  //         return;
+  //       }
+  //       const _ensName = await publicClient.getEnsName({
+  //         address: embeddedWallet?.address! as `0x${string}`,
+  //       });
+  //       setEnsName(_ensName);
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   };
+  //   ensLookup();
+  // }, [wallets, embeddedWallet]);
 
   const handleSubmit = async () => {
     if (activeStep === 1) {
@@ -72,6 +73,10 @@ export const useCreateAgent = () => {
       };
       const provider = await embeddedWallet?.getEthereumProvider();
 
+      // console.log("my provider", embeddedWallet?.address);
+
+      // return;
+
       try {
         const result = await createAIAgent(
           metadata,
@@ -87,17 +92,18 @@ export const useCreateAgent = () => {
           isCompleteStep(2);
         }
       } catch (e: any) {
-        toast({
-          status: "error",
-          position: "top",
-          duration: 50000,
-          isClosable: true,
-          size: "large",
-          title: "Error",
-          description: e.message || progress || "Encoutered error",
-        });
-        setActiveStep(0);
-        reset();
+        // return;
+        // toast({
+        //   status: "error",
+        //   position: "top",
+        //   duration: 50000,
+        //   isClosable: true,
+        //   size: "large",
+        //   title: "Error",
+        //   description: e.message || progress || "Encoutered error",
+        // });
+        // setActiveStep(0);
+        // reset();
       }
     } else {
       if (activeStep === 2) {

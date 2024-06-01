@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
   FormControl,
-  FormLabel,
   Input,
   Modal,
   ModalBody,
@@ -25,6 +24,9 @@ const AddToKnowledgeBaseModal = ({
   onClose: () => void;
   onSumbit: () => void;
 }) => {
+  const [agent, setAgent] = useState(
+    "0xBf3F71C795aB263306e0Efd7f040F6a75b4Ff9c0"
+  );
   const handleSubmit = async () => {
     onSumbit();
   };
@@ -48,6 +50,8 @@ const AddToKnowledgeBaseModal = ({
                   h="60px"
                   type="text"
                   placeholder="Enter address or ENS name"
+                  value={agent}
+                  onChange={(e) => setAgent(e.target.value)}
                 />
                 <Box
                   zIndex={1}
@@ -99,7 +103,7 @@ const AddToKnowledgeBaseModal = ({
               mr={3}
               onClick={handleSubmit}
             >
-              Save
+              Add Document
             </Button>
           </ModalFooter>
         </ModalContent>

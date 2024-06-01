@@ -36,6 +36,7 @@ export const deployNFTContract = async (
     chain: sepolia,
     transport: http(),
   });
+  
 
   const nftFactoryAddress = process.env.NEXT_PUBLIC_NFTFACTORY_ADDRESS;
   const deployNFTCallData = encodeFunctionData({
