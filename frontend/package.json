@@ -18,6 +18,8 @@
     "@lit-protocol/auth-browser": "^5.1.0",
     "@lit-protocol/lit-node-client": "^5.1.0",
     "@privy-io/react-auth": "^1.66.2",
+    "axios": "^1.7.2",
+    "blueband-db": "https://github.com/acgodson/blueband.git#main",
     "framer-motion": "^11.2.6",
     "graphql": "^16.8.1",
     "mammoth": "^1.7.2",
@@ -25,8 +27,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
-    "viem": "^2.13.1",
-    "blueband-db": "https://github.com/acgodson/blueband.git#main"
+    "viem": "^2.13.1"
   },
   "devDependencies": {
     "@types/node": "^20",

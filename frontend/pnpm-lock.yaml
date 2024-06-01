@@ -35,6 +35,9 @@ dependencies:
   '@privy-io/react-auth':
     specifier: ^1.66.2
     version: 1.67.0(@babel/core@7.24.6)(@types/react@18.3.3)(react-dom@18.3.1)(react-is@18.3.1)(react@18.3.1)(typescript@5.4.5)
+  axios:
+    specifier: ^1.7.2
+    version: 1.7.2
   blueband-db:
     specifier: https://github.com/acgodson/blueband.git#main
     version: github.com/acgodson/blueband/e7d759a47dab1d3beafda8823b926d6700e94dee(typescript@5.4.5)
