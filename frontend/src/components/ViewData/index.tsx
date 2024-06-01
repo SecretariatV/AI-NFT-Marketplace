@@ -14,20 +14,22 @@ import {
 import { useRouter } from "next/router";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import { BiStore } from "react-icons/bi";
-import { convertTimestampToDate } from "@/utils/helpers";
-import { formatEther } from "viem";
+import { callWriteContract, convertTimestampToDate } from "@/utils/helpers";
+import { encodeFunctionData, formatEther, getAddress, parseEther } from "viem";
 import { FaExternalLinkAlt, FaLock, FaLockOpen, FaRobot } from "react-icons/fa";
 import AddToKnowledgeBaseModal from "../Modals/AddToKnowledgeBaseModal";
 import { addDocument, queryDocument } from "@/utils/agent-creation";
 import { useWallets } from "@privy-io/react-auth";
+import NFT from "@/utils/NFT.json";
 
 export default function ViewData() {
-  const { index, nftData } = useGlobalContext();
+  const { index, nftData, smartAccountClient } = useGlobalContext();
   const { wallets } = useWallets();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [nft, setNft] = useState<any | null>(null);
   const router = useRouter();
   const [searching, setSearching] = useState(true);
+  const [hasNFT, setHasNFT] = useState(false);
   const embeddedWallet = wallets.find(
     (wallet) => wallet.walletClientType !== "privy"
   );
@@ -37,7 +39,9 @@ export default function ViewData() {
   useEffect(() => {
     function filter() {
       const filter = nftData.filter((nft: any) => nft.id === id);
+
       if (filter && filter.length > 0) {
+        console.log("nfttt", filter);
         setNft(filter[0]);
       }
 
@@ -59,6 +63,39 @@ export default function ViewData() {
   const handleConsume = async () => {
     const provider = await embeddedWallet?.getEthereumProvider();
     const updateCatalog = await queryDocument(embeddedWallet?.address!);
+  };
+
+  const mintDocument = async () => {
+
+    // alert("yess")
+    // return
+    
+
+    const ownerAddress = embeddedWallet?.address!;
+    const provider = await embeddedWallet?.getEthereumProvider();
+    const nftAddress = nft.nftAddress;
+
+    if (!provider) {
+      console.log("error mate, invalid provider");
+      return;
+    }
+
+    const callData = encodeFunctionData({
+      abi: NFT.abi,
+      functionName: "mintNFT",
+    });
+    const transaction = {
+      to: getAddress(nftAddress),
+      from: ownerAddress,
+      // data: callData,
+      value: nft.mintPrice,
+    };
+    const transactionHash = await provider.request({
+      method: "eth_sendTransaction",
+      params: [transaction],
+    });
+
+    setHasNFT(true);
   };
 
   // const handleDecrypt = async () => {
@@ -256,6 +293,7 @@ export default function ViewData() {
                       variant={"outline"}
                       w="100%"
                       maxW={"400px"}
+                      onClick={mintDocument}
                       leftIcon={<FaLockOpen />}
                       rightIcon={
                         <>

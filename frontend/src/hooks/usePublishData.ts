@@ -24,8 +24,12 @@ export const usePublishData = () => {
   const [file, setFile] = useState<File | null>(null);
   const [fileContent, setFileContent] = useState<any>(null);
   const [nftTitle, setNftTitle] = useState("");
+  const [nftAddress, setNftAddress] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState<string>("");
+  const [success, setSuccess] = useState(false);
   const [price, setPrice] = useState(0);
   const [ethPrice, setEthPrice] = useState("0");
   const [coverImage, setCoverImage] = useState<any | null>(null);
@@ -77,63 +81,78 @@ export const usePublishData = () => {
   const publish = async () => {
     if (!file) {
       console.log("please upload a valid document");
+      setLoading(false);
+      setProgress("");
       return;
     }
-
+    setLoading(true);
     const smartAccount = await smartAccountClient();
     const ownerAddress = embeddedWallet?.address!;
     const provider = await embeddedWallet?.getEthereumProvider();
-    const litNodeClient = await getlitNodeClient();
-    const nonce = await litNodeClient.getLatestBlockhash();
+    try {
+      const litNodeClient = await getlitNodeClient();
+      const nonce = await litNodeClient.getLatestBlockhash();
 
-    const predictedNFTAddress = await computeCreate2Address(
-      ownerAddress,
-      ethPrice,
-      nonce
-    );
+      const predictedNFTAddress = await computeCreate2Address(
+        ownerAddress,
+        ethPrice,
+        nonce
+      );
 
-    const deployResponse = await deployNFTContract(
-      ownerAddress,
-      nonce,
-      provider
-    );
+      setProgress("deploying NFT Contract");
+      const deployResponse = await deployNFTContract(
+        ownerAddress,
+        nonce,
+        provider
+      );
 
-    if (!deployResponse) {
-      console.log("Could not deploy NFT contract");
-      return;
+      if (!deployResponse) {
+        console.log("Could not deploy NFT contract");
+        return;
+      }
+
+      setProgress("Signing encryption");
+      const authSig = await getAuthSig(
+        await embeddedWallet?.getEthersProvider(),
+        ownerAddress,
+        sepolia.id.toString(),
+        nonce
+      );
+
+      setProgress("Encrypting with LIT");
+      const encryptedJSON = await encryptFileWithLitProtocol(
+        authSig,
+        ownerAddress,
+        predictedNFTAddress,
+        litNodeClient,
+        file
+      );
+
+      setProgress("Updating NFT metadata");
+      const metadata = await uploadEncryptedFile(encryptedJSON, ownerAddress, {
+        nftTitle,
+        description,
+        category,
+        coverImage,
+      });
+
+      const metaDataCID = await uploadMetadata(metadata);
+
+      const updateResponse = await updateNFTCID(
+        predictedNFTAddress,
+        metaDataCID,
+        ownerAddress,
+        provider
+      );
+      console.log(updateResponse);
+      setNftAddress(predictedNFTAddress);
+      setLoading(false);
+      setSuccess(true);
+    } catch (e) {
+      setLoading(false);
+      setSuccess(false);
+      setProgress("");
     }
-
-    const authSig = await getAuthSig(
-      await embeddedWallet?.getEthersProvider(),
-      ownerAddress,
-      sepolia.id.toString(),
-      nonce
-    );
-
-    const encryptedJSON = await encryptFileWithLitProtocol(
-      authSig,
-      ownerAddress,
-      predictedNFTAddress,
-      litNodeClient,
-      file
-    );
-
-    const metadata = await uploadEncryptedFile(encryptedJSON, ownerAddress, {
-      nftTitle,
-      description,
-      category,
-      coverImage,
-    });
-
-    const metaDataCID = await uploadMetadata(metadata);
-
-    const updateResponse = await updateNFTCID(
-      predictedNFTAddress,
-      metaDataCID,
-      ownerAddress,
-      provider
-    );
-    console.log(updateResponse);
   };
 
   const generateThumbnail = async () => {
@@ -211,6 +230,10 @@ export const usePublishData = () => {
     errorTitle,
     generating,
     prompt,
+    progress,
+    loading,
+    success,
+    nftAddress,
     handleFileChange,
     handleInput,
     closeError,

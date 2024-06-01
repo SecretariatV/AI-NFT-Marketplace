@@ -1,5 +1,12 @@
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
-import { encodeFunctionData, getAddress, parseEther } from "viem";
+import {
+  createPublicClient,
+  encodeFunctionData,
+  getAddress,
+  parseEther,
+  http,
+} from "viem";
+import { sepolia } from "viem/chains";
 import NFTFactory from "@/utils/NFTFactory.json";
 import NFT from "@/utils/NFT.json";
 import { PaymasterMode } from "@biconomy/account";
@@ -24,7 +31,13 @@ export const deployNFTContract = async (
     console.error("provider not set up");
     return;
   }
-  const nftFactoryAddress = "0x06CB3a44C9b4BF6C4FaEEACA4976707b751fe2f5"; //process.env.NEXT_PUBLIC_NFTFACTORY_ADDRESS;
+
+  const publicClient = createPublicClient({
+    chain: sepolia,
+    transport: http(),
+  });
+
+  const nftFactoryAddress = process.env.NEXT_PUBLIC_NFTFACTORY_ADDRESS;
   const deployNFTCallData = encodeFunctionData({
     abi: NFTFactory.abi,
     functionName: "deployNFT",
@@ -41,6 +54,10 @@ export const deployNFTContract = async (
     const transactionHash = await provider.request({
       method: "eth_sendTransaction",
       params: [transaction],
+    });
+
+    const wait = await publicClient.waitForTransactionReceipt({
+      hash: transactionHash,
     });
     return transactionHash;
   }

@@ -58,7 +58,7 @@ const CreateAgentModal = ({
         />
       );
       break;
-    case 4:
+    case 0:
       modalBodyContent = <CreateAgentTemplate />;
       break;
     default:

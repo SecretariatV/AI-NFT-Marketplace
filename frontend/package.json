@@ -25,7 +25,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
-    "viem": "^2.13.1"
+    "viem": "^2.13.1",
+    "blueband-db": "https://github.com/acgodson/blueband.git#main"
   },
   "devDependencies": {
     "@types/node": "^20",

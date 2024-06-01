@@ -2,7 +2,7 @@ import { Button, HStack, Text } from "@chakra-ui/react";
 import { FaChevronLeft } from "react-icons/fa";
 import { useRouter } from "next/router";
 
-export default function PublishHeader() {
+export default function PublishHeader({ success }: { success?: boolean }) {
   const router = useRouter();
 
   return (
@@ -28,13 +28,17 @@ export default function PublishHeader() {
         >
           Return
         </Button>
-        <Text
-          fontSize={["xl", "xl", "4xl"]}
-          fontWeight={"light"}
-          letterSpacing={"1.25px"}
-        >
-          Publish to Marketplace
-        </Text>
+        {!success && (
+          <>
+            <Text
+              fontSize={["xl", "xl", "4xl"]}
+              fontWeight={"light"}
+              letterSpacing={"1.25px"}
+            >
+              Publish to Marketplace
+            </Text>
+          </>
+        )}
       </HStack>
     </>
   );

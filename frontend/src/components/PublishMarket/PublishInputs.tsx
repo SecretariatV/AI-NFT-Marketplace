@@ -28,7 +28,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import {  FaMinus, FaPlus } from "react-icons/fa";
+import { FaMinus, FaPlus } from "react-icons/fa";
 import { MdPhotoLibrary } from "react-icons/md";
 
 export default function PublishInputs({
@@ -40,8 +40,9 @@ export default function PublishInputs({
   handleInput,
   generating,
   values,
+  loading,
 }: {
-  file: File | null ;
+  file: File | null;
   publish: () => void;
   generateThumbnail: any;
   setPrice: (e: number) => void;
@@ -49,6 +50,7 @@ export default function PublishInputs({
   handleInput: any;
   generating: boolean;
   values: any;
+  loading?: boolean;
 }) {
   const router = useRouter();
 
@@ -346,8 +348,9 @@ export default function PublishInputs({
               colorScheme="purple"
               onClick={publish}
               fontSize={"xl"}
+              isLoading={loading}
             >
-              Deploy
+              Deploy {` ${values.progress}`}
             </Button>
           </Box>
         </Box>

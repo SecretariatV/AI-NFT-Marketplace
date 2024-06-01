@@ -132,21 +132,21 @@ export const callWriteContract = async (
   ownerAddress: `0x${string}`,
   abi: any,
   functionName: string,
-  args: any[]
+  args: any[],
+  value?: any
 ) => {
+  // let transaction;
   try {
     const callData = encodeFunctionData({
       abi,
       functionName,
       args: args,
     });
-
     const transaction = {
       to: contractAddress,
       from: ownerAddress,
       data: callData,
     };
-
     const transactionHash = await provider.request({
       method: "eth_sendTransaction",
       params: [transaction],

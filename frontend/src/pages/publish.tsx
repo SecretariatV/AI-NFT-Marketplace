@@ -5,9 +5,12 @@ import ErrorDialog from "@/components/Modals/errorDialog";
 import { usePublishData } from "@/hooks/usePublishData";
 import PublishHeader from "@/components/PublishMarket/PublishHeader";
 import PublishInputs from "@/components/PublishMarket/PublishInputs";
+import PublishingStatus from "@/components/PublishMarket/PublishingStatus";
+import { useGlobalContext } from "@/contexts/GlobalContext";
 
 const PublishPage = () => {
   const router = useRouter();
+  const { setIndex } = useGlobalContext();
 
   const {
     file,
@@ -22,6 +25,10 @@ const PublishPage = () => {
     errorTitle,
     generating,
     prompt,
+    progress,
+    loading,
+    success,
+    nftAddress,
     handleInput,
     setPrice,
     handleFileChange,
@@ -29,7 +36,7 @@ const PublishPage = () => {
     publish,
     closeError,
   } = usePublishData();
-
+  // close
   let values = {
     nftTitle,
     description,
@@ -38,6 +45,7 @@ const PublishPage = () => {
     coverImage,
     prompt,
     termsChecked,
+    progress,
   };
 
   return (
@@ -51,18 +59,45 @@ const PublishPage = () => {
         rounded="md"
         shadow="md"
       >
-        <PublishHeader />
+        <PublishHeader success={success} />
 
-        <PublishInputs
-          file={file}
-          publish={publish}
-          generateThumbnail={generateThumbnail}
-          setPrice={setPrice}
-          handleFileChange={handleFileChange}
-          handleInput={handleInput}
-          generating={generating}
-          values={values}
-        />
+        {!loading && !success && (
+          <PublishInputs
+            file={file}
+            publish={publish}
+            generateThumbnail={generateThumbnail}
+            setPrice={setPrice}
+            handleFileChange={handleFileChange}
+            handleInput={handleInput}
+            generating={generating}
+            values={values}
+            loading={loading}
+          />
+        )}
+
+        {loading && (
+          <PublishingStatus
+            isLoading={loading}
+            isSuccess={success}
+            name={nftTitle}
+            progress={progress}
+            nftAddress={nftAddress}
+          />
+        )}
+
+        {success && (
+          <PublishingStatus
+            isLoading={loading}
+            isSuccess={success}
+            name={nftTitle}
+            progress={progress}
+            nftAddress={nftAddress}
+            close={() => {
+              setIndex(0);
+              router.push("/");
+            }}
+          />
+        )}
       </Box>
 
       <ErrorDialog
