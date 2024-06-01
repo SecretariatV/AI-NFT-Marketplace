@@ -19,11 +19,15 @@ import {
 const AddToKnowledgeBaseModal = ({
   isOpen,
   onClose,
+  onSumbit,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  onSumbit: () => void;
 }) => {
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    onSumbit();
+  };
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>

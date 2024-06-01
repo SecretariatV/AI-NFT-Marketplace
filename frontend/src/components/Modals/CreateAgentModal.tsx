@@ -14,9 +14,7 @@ import {
   ModalOverlay,
   Textarea,
   Text,
-  Avatar,
   Divider,
-  useDisclosure,
   useMediaQuery,
   Step,
   HStack,
@@ -50,6 +48,7 @@ import {
   FaPhoneAlt,
 } from "react-icons/fa";
 import { title } from "process";
+import { createAIAgent } from "@/utils/agent-creation";
 
 const CreateAgentModal = ({
   isOpen,
@@ -60,6 +59,7 @@ const CreateAgentModal = ({
 }) => {
   const { isCollapsed } = useGlobalContext();
   const [showToolTip, setShowToolTip] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
   const { wallets } = useWallets();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const [selected, setSelected] = useState(0);
@@ -67,11 +67,15 @@ const CreateAgentModal = ({
   const [ensSubName, setSubName] = useState<any | string | null>("");
   const [name, setName] = useState("");
   const [descripiton, setDescripiton] = useState("");
+  const [agent, setAgent] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const { activeStep, setActiveStep, isCompleteStep } = useSteps({
     index: 0,
   });
+  const embeddedWallet = wallets.find(
+    (wallet) => wallet.walletClientType !== "privy"
+  );
 
   useEffect(() => {
     const ensLookup = async () => {
@@ -87,7 +91,7 @@ const CreateAgentModal = ({
           return;
         }
         const _ensName = await publicClient.getEnsName({
-          address: wallets[1]?.address as `0x${string}`,
+          address: embeddedWallet?.address! as `0x${string}`,
         });
         setEnsName(_ensName);
       } catch (e) {
@@ -95,7 +99,7 @@ const CreateAgentModal = ({
       }
     };
     ensLookup();
-  }, [wallets]);
+  }, [wallets, embeddedWallet]);
 
   const steps = [
     { title: "Choose from Template" },
@@ -109,15 +113,35 @@ const CreateAgentModal = ({
     { title: "Wizard", description: "Select Rooms", icon: "/wizard.svg" },
   ];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (activeStep === 1) {
+      if (name.length < 2) {
+        setNameError("Name must be at least 2 characters long");
+        return;
+      } else {
+        setNameError(null);
+      }
       setActiveStep(activeStep + 1);
       setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        setSuccess(true);
-        isCompleteStep(2);
-      }, 2000);
+      const metadata = {
+        name,
+        template: "",
+        ensSubName: "",
+        creator: embeddedWallet?.address,
+        descripiton,
+        model: "gpt-3",
+        chain: "Sepolia",
+      };
+      const provider = await embeddedWallet?.getEthereumProvider();
+      const result = await createAIAgent(
+        metadata,
+        embeddedWallet?.address!,
+        provider
+      );
+      setAgent(agent);
+      setLoading(false);
+      setSuccess(true);
+      isCompleteStep(2);
     } else {
       setActiveStep(activeStep + 1);
     }
@@ -161,7 +185,7 @@ const CreateAgentModal = ({
                 letterSpacing={"1.25px"}
                 fontSize={"lg"}
               >
-                <Stepper index={activeStep}>
+                <Stepper index={activeStep} colorScheme="purple">
                   {steps.map((step, index) => (
                     <Step key={index}>
                       <StepIndicator>
@@ -198,7 +222,7 @@ const CreateAgentModal = ({
                   spacing={8}
                 >
                   <Box w="100%">
-                    <FormControl mt={4} id="name">
+                    <FormControl mt={4} id="name" isInvalid={!!nameError}>
                       <Box position={"relative"} w="100%">
                         <Input
                           w="100%"
@@ -211,6 +235,11 @@ const CreateAgentModal = ({
                           onChange={(e) => setName(e.target.value)}
                           placeholder="Full name"
                         />
+                        {nameError && (
+                          <Text color="red.200" mt={2} fontSize="xs">
+                            {nameError}
+                          </Text>
+                        )}
                         <Box
                           zIndex={1}
                           mt={-2}
@@ -391,7 +420,7 @@ const CreateAgentModal = ({
                       label="Coming soon"
                     >
                       <Box
-                        border={i === 0 ? "0.5px solid #EB4634" : "none"}
+                        border={i === 0 ? "0.5px solid #db65c1" : "none"}
                         opacity={i === 0 ? 1 : 0.6}
                         py={4}
                         h="300px"
@@ -463,7 +492,7 @@ const CreateAgentModal = ({
                               focusBorderColor="#3d3d3d"
                               bg="#181818"
                               type="text"
-                              placeholder="Eth address"
+                              placeholder={agent ? agent.agentAddress : ""}
                               readOnly={true}
                             />
 
@@ -497,11 +526,11 @@ const CreateAgentModal = ({
                             <Input
                               w="100%"
                               borderRadius={"8px"}
-                              border={"0.5px solid #3d3d3d"}
+                              border={"0.5px solid #db65c1"}
                               focusBorderColor="#3d3d3d"
                               bg="#181818"
                               type="text"
-                              placeholder="IPNS pointer address"
+                              placeholder={agent ? agent.indexName : ""}
                               readOnly={true}
                             />
 

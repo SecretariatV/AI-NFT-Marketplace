@@ -18,13 +18,19 @@ import { convertTimestampToDate } from "@/utils/helpers";
 import { formatEther } from "viem";
 import { FaExternalLinkAlt, FaLock, FaLockOpen, FaRobot } from "react-icons/fa";
 import AddToKnowledgeBaseModal from "../Modals/AddToKnowledgeBaseModal";
+import { addDocument, queryDocument } from "@/utils/agent-creation";
+import { useWallets } from "@privy-io/react-auth";
 
 export default function ViewData() {
   const { index, nftData } = useGlobalContext();
+  const { wallets } = useWallets();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [nft, setNft] = useState<any | null>(null);
   const router = useRouter();
   const [searching, setSearching] = useState(true);
+  const embeddedWallet = wallets.find(
+    (wallet) => wallet.walletClientType !== "privy"
+  );
 
   const { id } = router.query;
 
@@ -49,6 +55,11 @@ export default function ViewData() {
       filter();
     }
   }, [id, nftData, searching, nft]);
+
+  const handleConsume = async () => {
+    const provider = await embeddedWallet?.getEthereumProvider();
+    const updateCatalog = await queryDocument(embeddedWallet?.address!);
+  };
 
   // const handleDecrypt = async () => {
   //   const litNodeClient = new LitJsSdk.LitNodeClientNodeJs({
@@ -279,7 +290,11 @@ export default function ViewData() {
         </Stack>
       </Box>
 
-      <AddToKnowledgeBaseModal isOpen={isOpen} onClose={onClose} />
+      <AddToKnowledgeBaseModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onSumbit={handleConsume}
+      />
     </>
   );
 }

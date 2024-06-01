@@ -28,8 +28,8 @@ export default function HomeView() {
     <>
       <Box pt={4} pb={8} px={8} minH="270px" bg="#1f2022" borderRadius={"18px"}>
         <Headers
-          icon={<FaRobot size={"lg"} />}
-          title="My AI Agents"
+          icon={<MdPublic size={"lg"} />}
+          title="Templates"
           bg="#1e1f23"
         />
         <CreateAgentCard />
@@ -37,8 +37,8 @@ export default function HomeView() {
 
       <Box mt={8}>
         <Headers
-          icon={<MdPublic size={"lg"} />}
-          title="Public Agents"
+          icon={<FaRobot size={"lg"} />}
+          title="My Agents"
           bg="transparent"
         />
 

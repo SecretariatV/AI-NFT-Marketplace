@@ -1,8 +1,16 @@
 import mammoth from "mammoth";
-import { parseEther, createPublicClient, http, Address } from "viem";
+import {
+  parseEther,
+  createPublicClient,
+  http,
+  Address,
+  WalletClient,
+  encodeFunctionData,
+} from "viem";
 import { sepolia } from "viem/chains";
 import NFTFactory from "./NFTFactory.json";
 import NFT from "./NFT.json";
+import { privateKeyToAccount } from "viem/accounts";
 
 /**
  * Shortens an Ethereum address to a more readable format.
@@ -128,3 +136,70 @@ export const getDetailsFromNFTContract = async (nftAddress: string) => {
 
   return data;
 };
+
+export const callWriteContract = async (
+  provider: any,
+  contractAddress: `0x${string}`,
+  ownerAddress: `0x${string}`,
+  abi: any,
+  functionName: string,
+  args: any[]
+) => {
+  try {
+    const callData = encodeFunctionData({
+      abi,
+      functionName,
+      args: args,
+    });
+
+    const transaction = {
+      to: contractAddress,
+      from: ownerAddress,
+      data: callData,
+    };
+
+    const transactionHash = await provider.request({
+      method: "eth_sendTransaction",
+      params: [transaction],
+    });
+    return transactionHash;
+  } catch (error) {
+    console.error("Error saving catalog to smart contract:", error);
+    throw error;
+  }
+};
+
+export const callReadContract = async (
+  contract: string,
+  functionName: string,
+  abi: any[],
+  args: any[]
+) => {
+  const publicClient = createPublicClient({
+    chain: sepolia,
+    transport: http(),
+  });
+
+  const nftContract = {
+    address: contract as `0x${string}`,
+    abi: abi,
+    args,
+  };
+
+  const value = publicClient.readContract({
+    ...nftContract,
+    functionName: functionName,
+  });
+  return value;
+};
+
+export async function generateUrl(text: string) {
+  try {
+    const blob = new Blob([text], { type: "text/plain" });
+    const tempUrl = URL.createObjectURL(blob);
+    return tempUrl;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
