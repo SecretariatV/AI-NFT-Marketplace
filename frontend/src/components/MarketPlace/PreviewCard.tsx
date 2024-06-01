@@ -61,10 +61,10 @@ export default function PreviewCard({ nft }: { nft: any }) {
               </Text>
             </Flex>
           </Box>
-          <Text mt={2} px={4} fontSize={"sm"}>
+          <Text mt={2} px={4} fontSize={"sm"} noOfLines={1}>
             {nft.metadata.title}
           </Text>
-          <Text px={4} fontSize={"xs"} color={"gray"}>
+          <Text mt={2} px={4} fontSize={"xs"} color={"gray"}>
             {nft.metadata.description}
           </Text>
         </Box>

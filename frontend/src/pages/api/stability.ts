@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer  ${process.env.STABILITY_API_KEY}`,
+        Authorization: `Bearer ${process.env.STABILITY_API_KEY}`,
       },
       body: JSON.stringify({ text_prompts, samples: 1 }),
     }

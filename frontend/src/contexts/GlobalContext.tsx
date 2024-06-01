@@ -15,8 +15,13 @@ import { sepolia } from "viem/chains";
 import { useQuery } from "@apollo/client";
 import client from "@/utils/apollo-client";
 import { GET_NFT_DEPLOYED } from "@/utils/queries";
-import { fetchContent, getDetailsFromNFTContract } from "@/utils/helpers";
+import {
+  callReadContract,
+  fetchContent,
+  getDetailsFromNFTContract,
+} from "@/utils/helpers";
 import { useDisclosure } from "@chakra-ui/react";
+import AgentFactory from "@/utils/AgentFactory.json";
 
 interface GlobalContextType {
   isCollapsed: boolean;
@@ -40,9 +45,13 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [index, setIndex] = useState<number>(0);
   const [nftData, setNftData] = useState<null | any[] | any>(null);
+  const [agents, setAgents] = useState<null | any[] | any>(null);
   const { ready, authenticated, login } = usePrivy();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { wallets } = useWallets();
+  const embeddedWallet = wallets.find(
+    (wallet) => wallet.walletClientType !== "privy"
+  );
 
   const {
     loading: loadingMarket,
@@ -87,6 +96,32 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
       console.log("nft data", nftData);
     }
   }, [data, nftData]);
+
+  useEffect(() => {
+    const fetchAgents = async () => {
+      let metadata: any;
+      const factoryContract = process.env
+        .NEXT_PUBLIC_AGENTFACTORY_ADDRESS as `0x${string}`;
+      const agentInfo = await callReadContract(
+        factoryContract,
+        "getAgentsByCreator",
+        AgentFactory.abi,
+        [embeddedWallet?.address as `0x${string}`]
+      );
+
+      if (agentInfo) {
+        setAgents(agentInfo);
+      }
+    };
+
+    if (embeddedWallet && !agents) {
+      fetchAgents();
+    }
+
+    if (agents) {
+      console.log("agents data", agents);
+    }
+  }, [embeddedWallet, agents]);
 
   async function smartAccountClient() {
     if (!authenticated) {

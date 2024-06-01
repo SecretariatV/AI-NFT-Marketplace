@@ -73,6 +73,10 @@ export default function MarketplaceHeader({
                 border={`0.8px solid ${
                   tabIndex === i + 1 ? "#D968D0" : "#1e1f23"
                 }`}
+                _hover={{
+                  border: "0.7px solid #D968D0",
+                  color: "#D968D0",
+                }}
                 display="flex"
                 alignItems="center"
                 mb={4}
@@ -87,7 +91,7 @@ export default function MarketplaceHeader({
                   rounded={"full"}
                   w="30px"
                   bg={"transparent"}
-                  color={tabIndex === i + 1 ? "#D968D0" : "#7c8693"}
+                  color={tabIndex === i + 1 ? "#D968D0" : "inherit"}
                   mr={2}
                 />
                 <Text fontWeight={"bold"} fontSize={"xs"}>

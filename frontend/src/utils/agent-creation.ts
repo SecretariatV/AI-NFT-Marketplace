@@ -12,78 +12,177 @@ export const createAIAgent = async (
   metaData: any,
   ownerAddress: string | `0x${string}`,
   provider: any,
+  onProgress: (message: string) => void,
   smartAccount?: any
 ) => {
   let agent;
 
-  //upload data and get the cid
-  const cid = await uploadMetadata(metaData);
-  const factoryContract = process.env
-    .NEXT_PUBLIC_AGENTFACTORY_ADDRESS as `0x${string}`;
-  const lightHouseKey = process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY as string;
-  const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+  onProgress("starting...");
 
-  //set up admin-wallet-client {this is used to submit txn for user}
-  const client = createWalletClient({
-    chain: sepolia,
-    transport: http(),
-    account: privateKeyToAccount(privateKey as `0x${string}`),
-  });
+  try {
+    // Upload data and get the CID
+    const cid = await uploadMetadata(metaData);
 
-  const publicClient = createPublicClient({
-    chain: sepolia,
-    transport: http(),
-  });
+    const factoryContract = process.env
+      .NEXT_PUBLIC_AGENTFACTORY_ADDRESS as `0x${string}`;
+    const lightHouseKey = process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY as string;
+    const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
 
-  //create a new IPNS pointer for agent's index
-  const result: any = await createIndex(lightHouseKey, client as any);
-  const indexName = result.ipnsId;
+    // Set up admin-wallet-client {this is used to submit txn for user}
+    const client = createWalletClient({
+      chain: sepolia,
+      transport: http(),
+      account: privateKeyToAccount(privateKey as `0x${string}`),
+    });
 
-  //clone new agent contract
-  const txn = await callWriteContract(
-    provider,
-    factoryContract,
-    ownerAddress as `0x${string}`,
-    AgentFactory.abi,
-    "createAgent",
-    [cid]
-  );
+    const publicClient = createPublicClient({
+      chain: sepolia,
+      transport: http(),
+    });
 
-  const wait = await publicClient.waitForTransactionReceipt({
-    hash: txn,
-  });
+    // Create a new IPNS pointer for agent's index
+    onProgress("creating IPNS index...");
+    const result: any = await createIndex(lightHouseKey, client as any);
+    const indexName = result.ipnsId;
 
-  console.log(wait);
+    // Clone new agent contract
 
-  //retrieve address of newly created agent
-  const agentInfo = await callReadContract(
-    factoryContract,
-    "getAgentsByCreator",
-    AgentFactory.abi,
-    [ownerAddress as `0x${string}`]
-  );
-
-  if (agentInfo && agentInfo.length > 0) {
-    const length = agentInfo.length;
-    const address = agentInfo[length - 1].agentAddress;
-
-    //update agent contract with new Index
-    const txn2 = await callWriteContract(
+    onProgress("deploying agent contract...");
+    const txn = await callWriteContract(
       provider,
-      address,
+      factoryContract,
       ownerAddress as `0x${string}`,
-      Agent.abi,
-      "createIndex",
-      [indexName]
+      AgentFactory.abi,
+      "createAgent",
+      [cid]
     );
-    console.log("index updated on agent clone", txn2);
 
-    const info = agentInfo[length - 1];
-    agent = { ...info, indexName };
-    console.log("New agent", agent);
+    await publicClient.waitForTransactionReceipt({ hash: txn });
+
+    // Retrieve address of newly created agent
+    const agentInfo = await callReadContract(
+      factoryContract,
+      "getAgentsByCreator",
+      AgentFactory.abi,
+      [ownerAddress as `0x${string}`]
+    );
+
+    if (agentInfo) {
+      const length = agentInfo.length;
+      const address = agentInfo[length - 1].agentAddress;
+
+      // Update agent contract with new Index
+      onProgress("adding index to contract...");
+      const txn2 = await callWriteContract(
+        provider,
+        address,
+        ownerAddress as `0x${string}`,
+        Agent.abi,
+        "createIndex",
+        [indexName]
+      );
+
+      // await publicClient.waitForTransactionReceipt({ hash: txn2 });
+
+      const info = agentInfo[length - 1];
+      agent = { ...info, indexName };
+
+      console.log("New agent", agent);
+    }
+  } catch (error: any) {
+    console.error("Error creating AI agent:", error);
+    onProgress(`error: ${error.message}`);
+    throw error;
   }
-  return agent;
+
+  return { agent };
 };
+
+// export const createAIAgent = async (
+//   metaData: any,
+//   ownerAddress: string | `0x${string}`,
+//   provider: any,
+//   smartAccount?: any
+// ) => {
+//   let agent;
+//   let progress;
+
+//   //upload data and get the cid
+//   const cid = await uploadMetadata(metaData);
+//   const factoryContract = process.env
+//     .NEXT_PUBLIC_AGENTFACTORY_ADDRESS as `0x${string}`;
+//   const lightHouseKey = process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY as string;
+//   const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+
+//   //set up admin-wallet-client {this is used to submit txn for user}
+//   const client = createWalletClient({
+//     chain: sepolia,
+//     transport: http(),
+//     account: privateKeyToAccount(privateKey as `0x${string}`),
+//   });
+
+//   const publicClient = createPublicClient({
+//     chain: sepolia,
+//     transport: http(),
+//   });
+
+//   progress = "creating IPNS index...";
+//   //create a new IPNS pointer for agent's index
+//   const result: any = await createIndex(lightHouseKey, client as any);
+//   const indexName = result.ipnsId;
+
+//   //clone new agent contract
+//   const txn = await callWriteContract(
+//     provider,
+//     factoryContract,
+//     ownerAddress as `0x${string}`,
+//     AgentFactory.abi,
+//     "createAgent",
+//     [cid]
+//   );
+
+//   progress = "deploying agent contract...";
+//   const wait = await publicClient.waitForTransactionReceipt({
+//     hash: txn,
+//   });
+
+//   console.log(wait);
+
+//   //retrieve address of newly created agent
+//   const agentInfo = await callReadContract(
+//     factoryContract,
+//     "getAgentsByCreator",
+//     AgentFactory.abi,
+//     [ownerAddress as `0x${string}`]
+//   );
+
+//   if (agentInfo && agentInfo.length > 0) {
+//     const length = agentInfo.length;
+//     const address = agentInfo[length - 1].agentAddress;
+
+//     //update agent contract with new Index
+//     const txn2 = await callWriteContract(
+//       provider,
+//       address,
+//       ownerAddress as `0x${string}`,
+//       Agent.abi,
+//       "createIndex",
+//       [indexName]
+//     );
+
+//     progress = "adding index to contract...";
+
+//     const wait = await publicClient.waitForTransactionReceipt({
+//       hash: txn2,
+//     });
+//     console.log(wait);
+
+//     const info = agentInfo[length - 1];
+//     agent = { ...info, indexName };
+//     console.log("New agent", agent);
+//   }
+//   return { agent, progress };
+// };
 
 export const addDocument = async (provider: any, ownerAddress: string) => {
   let catalog;

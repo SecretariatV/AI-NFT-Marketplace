@@ -4,19 +4,13 @@ import {
   createPublicClient,
   http,
   Address,
-  WalletClient,
   encodeFunctionData,
 } from "viem";
 import { sepolia } from "viem/chains";
 import NFTFactory from "./NFTFactory.json";
 import NFT from "./NFT.json";
-import { privateKeyToAccount } from "viem/accounts";
+import axios from "axios";
 
-/**
- * Shortens an Ethereum address to a more readable format.
- * @param address The full Ethereum address to shorten.
- * @returns The shortened Ethereum address.
- */
 export function shortenAddress(address: string): string {
   if (!address || address.length < 10) {
     return address; // Return original if too short to shorten
@@ -24,11 +18,6 @@ export function shortenAddress(address: string): string {
   return `${address.slice(0, 4)}...${address.slice(-4)}`;
 }
 
-/**
- * Converts a timestamp to a human-readable date string.
- * @param timestamp - The timestamp to convert.
- * @returns A string representing the date in 'YYYY-MM-DD HH:mm:ss' format.
- */
 export function convertTimestampToDate(timestamp: number): string {
   const date = new Date(timestamp);
   const year = date.getFullYear();
@@ -203,3 +192,34 @@ export async function generateUrl(text: string) {
     throw error;
   }
 }
+
+const getEthPrice = async (): Promise<number> => {
+  const API_KEY = process.env.NEXT_PUBLIC_CRYPTO_COMPARE;
+  const API_URL = `https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=${API_KEY}`;
+  try {
+    const response = await axios.get(API_URL);
+    const data = response.data;
+
+    if (data && data.USD) {
+      return data.USD;
+    } else {
+      throw new Error("Invalid response data");
+    }
+  } catch (error) {
+    console.error("Error fetching ETH price:", error);
+    throw error;
+  }
+};
+
+export const getTokenPriceInUSD = async (
+  tokenAmount: number
+): Promise<number> => {
+  try {
+    const ethPriceInUSD = await getEthPrice();
+    const tokenPriceInUSD = tokenAmount / ethPriceInUSD;
+    return parseFloat(tokenPriceInUSD.toFixed(3));
+  } catch (error) {
+    console.error("Error calculating token price in USD:", error);
+    throw error;
+  }
+};

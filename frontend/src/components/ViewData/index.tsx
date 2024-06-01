@@ -166,6 +166,7 @@ export default function ViewData() {
               w="100%"
               top={0}
               bottom={0}
+              px={3}
             >
               <Button
                 sx={{
@@ -181,7 +182,8 @@ export default function ViewData() {
                   color: "white",
                 }}
                 borderRadius={"25px"}
-                w="300px"
+                maxW="300px"
+                w="100%"
                 h="50px"
                 px={[3, 3, 4]}
                 // isDisabled={true}

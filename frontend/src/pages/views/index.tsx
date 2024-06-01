@@ -14,7 +14,6 @@ export default function Views() {
 
   return (
     <Layout>
-      {/* <MyViews /> */}
       <div>redirecting...</div>
     </Layout>
   );
