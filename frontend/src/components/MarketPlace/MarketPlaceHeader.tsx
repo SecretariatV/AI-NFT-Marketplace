@@ -26,10 +26,10 @@ export default function MarketplaceHeader({
     <>
       <Box
         textAlign={"center"}
-        fontSize={["md", "md", "2xl"]}
+        fontSize={["lg", "lg", "2xl"]}
         fontWeight={"lighter"}
         letterSpacing={"1.25px"}
-        color="#d968d0"
+        color="white"
       >
         Build your AI Agent with Specialized Datasets
       </Box>

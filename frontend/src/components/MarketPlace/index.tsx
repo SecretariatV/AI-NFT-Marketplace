@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Center, Spinner, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Flex, Spinner, Text } from "@chakra-ui/react";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 
 import MarketplaceHeader from "./MarketPlaceHeader";
@@ -86,7 +86,7 @@ export default function Marketplace() {
             )}
 
             {filtered && (
-              <>
+              <Flex w="100%" flexWrap={"wrap"} gap={[2, 2, 8]}>
                 {filtered.length > 0 ? (
                   filtered.map((nft: any, i: number) => (
                     <Results key={i} nft={nft} />
@@ -100,7 +100,7 @@ export default function Marketplace() {
                     </Center>
                   </Box>
                 )}
-              </>
+              </Flex>
             )}
           </Box>
         </>

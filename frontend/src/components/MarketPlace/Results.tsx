@@ -1,15 +1,5 @@
-import { useState } from "react";
-import {
-  Avatar,
-  Box,
-  Button,
-  Center,
-  HStack,
-  Text,
-  Divider,
-  Flex,
-  Stack,
-} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Box, Button, HStack, Text, Flex } from "@chakra-ui/react";
 import { FaPenFancy } from "react-icons/fa";
 import { shortenAddress } from "@/utils/helpers";
 import { useRouter } from "next/router";
@@ -17,17 +7,28 @@ import { formatEther } from "viem";
 
 export default function Results({ nft }: { nft: any }) {
   const router = useRouter();
+
+  const [image, setImage] = useState<any | null>(null);
+
+  useEffect(() => {
+    async function fetchImage() {
+      const hash = nft.metadata.thumbnail;
+      const response = await fetch(
+        `https://gateway.lighthouse.storage/ipfs/${hash}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch content");
+      }
+      const data = response.text();
+      setImage(await data);
+    }
+    if (nft.metadata.thumbnail.length > 2 && !image) {
+      fetchImage();
+    }
+  }, [nft.metadata.thumbnail, image]);
   return (
     <>
-      <Box
-        mt={14}
-        display={"grid"}
-        gridTemplateColumns={[
-          "repeat(1fr, 1",
-          "repeat(1fr, 1",
-          "repeat(1fr, 2",
-        ]}
-      >
+      <Box mt={14} w="100%" maxW="400px">
         <Box
           pb={4}
           h="400px"
@@ -47,12 +48,14 @@ export default function Results({ nft }: { nft: any }) {
               borderBottomRadius={"30px"}
               w="100%"
               h="70%"
-              bg="#121212"
+              // backgroundColor="#121212"
               display={"flex"}
               flexDir={"column"}
               justifyContent={"flex-end"}
               pb={4}
               px={3}
+              background={image ? `url('${image}')` : "#121212"}
+              backgroundSize={"cover"}
               color={"gray"}
             >
               <Flex align={"center"}>
@@ -85,11 +88,13 @@ export default function Results({ nft }: { nft: any }) {
               h="50px"
               w="130px"
               color="white"
+              colorScheme="purple"
               sx={{
                 bgGradient: "linear(to-r, #D968D0, #EB4634)",
               }}
+              onClick={() => router.push(`/views/${nft.id}`)}
             >
-              Buy
+              Add
             </Button>
           </HStack>
         </Box>
