@@ -1,4 +1,12 @@
-import { Box, Text, Flex, Stack, HStack, Center } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Flex,
+  Stack,
+  HStack,
+  Center,
+  Skeleton,
+} from "@chakra-ui/react";
 import { FaPlay, FaUser } from "react-icons/fa";
 import Headers from "@/components/Headers";
 import { MdTrendingUp } from "react-icons/md";
@@ -34,12 +42,14 @@ export default function Overview() {
   return (
     <>
       <Box
-        py={4}
-        px={8}
+        // py={4}
+        px={nftData && nftData.length > 0 ? 8 : 0}
+        py={nftData && nftData.length > 0 ? 4 : 0}
         minH="270px"
         bg="#1f2022"
         color={"lightgreen"}
         borderRadius={"18px"}
+        position={"relative"}
       >
         {!loadingMarket && nftData && nftData.length > 0 && (
           <>
@@ -57,6 +67,17 @@ export default function Overview() {
                 ))}
             </HStack>
           </>
+        )}
+
+        {!nftData && (
+          <Skeleton
+            borderRadius={"18px"}
+            startColor={"#1f2022"}
+            endColor={"#181818"}
+            w="100%"
+            position={"absolute"}
+            height="100%"
+          />
         )}
       </Box>
 
