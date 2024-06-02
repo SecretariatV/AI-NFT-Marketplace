@@ -90,7 +90,7 @@ export default function AgentsCard({
             <Flex>
               {" "}
               <MdFolder />
-              <Text fontSize={"xs"} fontWeight={"bold"}>
+              <Text ml={2} fontSize={"xs"} fontWeight={"bold"}>
                 {files}
               </Text>
             </Flex>

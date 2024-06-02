@@ -13,8 +13,10 @@ import { MdPublic } from "react-icons/md";
 import AgentsCard from "./AgentsCard";
 import Headers from "@/components/Headers";
 import CreateAgentCard from "./CreateAgentCard";
+import { useGlobalContext } from "@/contexts/GlobalContext";
 
 export default function HomeView() {
+  const { agents } = useGlobalContext();
   const mockAgentsData = [
     {
       title: "Chef-Adah.zero.eth",
@@ -43,22 +45,25 @@ export default function HomeView() {
         />
 
         {/* display cards of AI Agents */}
-        <Box
-          display="flex"
+        <Flex
+          flexWrap={"wrap"}
           w="100%"
           alignItems={["center", "center", "flex-start"]}
+          justifyContent={"space-between"}
           p={4}
+          gap={[2, 2, 8]}
         >
-          {mockAgentsData.map((agent, i) => (
-            <AgentsCard
-              key={i}
-              title={agent.title}
-              description={agent.description}
-              address={agent.address}
-              files={agent.files}
-            />
-          ))}
-        </Box>
+          {agents &&
+            agents.map((agent: any, i: number) => (
+              <AgentsCard
+                key={i}
+                title={agent.metadata.name || ""}
+                description={agent.metadata.description || ""}
+                address={agent.agentAddress}
+                files={agent.count}
+              />
+            ))}
+        </Flex>
       </Box>
     </>
   );

@@ -53,7 +53,7 @@ export const fetchContent = async (hash: string) => {
     const data = response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching content:", error);
+    // console.error("Error fetching content:", error);
     return null;
   }
 };
@@ -119,7 +119,7 @@ export const getDetailsFromNFTContract = async (nftAddress: string) => {
       cid,
     };
   } catch (error) {
-    console.error("Error fetching CID:", error);
+    // console.error("Error fetching CID:", error);
     return null;
   }
 

@@ -9,11 +9,17 @@ export default function DocumentCard({
   loading,
   mintDocument,
   viewDocument,
+  checkMint,
+  showMint,
+  // hasNFT
 }: {
   nft: any;
   loading: boolean;
   mintDocument: () => void;
   viewDocument: () => void;
+  checkMint: boolean;
+  showMint: boolean;
+  // hasNFT: boolean;
 }) {
   return (
     <>
@@ -64,30 +70,33 @@ export default function DocumentCard({
           </Box>
 
           <Box mt={8}>
-            <Button
-              h="50px"
-              fontSize={"lg"}
-              bg="white"
-              fontWeight={"bold"}
-              colorScheme="pink"
-              variant={"outline"}
-              w="100%"
-              maxW={"400px"}
-              onClick={mintDocument}
-              isLoading={loading}
-              leftIcon={<FaLockOpen />}
-              rightIcon={
-                <>
-                  <Box w="fit-content" px={1}>
-                    {!formatEther(nft.mintPrice.toString)
-                      ? "Free"
-                      : `${formatEther(nft.mintPrice)} ETH`}
-                  </Box>
-                </>
-              }
-            >
-              Unlock Document
-            </Button>
+            {!checkMint && (
+              <Button
+                display={!showMint ? "none" : "inherit"}
+                h="50px"
+                fontSize={"lg"}
+                bg="white"
+                fontWeight={"bold"}
+                colorScheme="pink"
+                variant={"outline"}
+                w="100%"
+                maxW={"400px"}
+                onClick={mintDocument}
+                isLoading={loading}
+                leftIcon={<FaLockOpen />}
+                rightIcon={
+                  <>
+                    <Box w="fit-content" px={1}>
+                      {!formatEther(nft.mintPrice.toString)
+                        ? "Free"
+                        : `${formatEther(nft.mintPrice)} ETH`}
+                    </Box>
+                  </>
+                }
+              >
+                Unlock Document
+              </Button>
+            )}
 
             <Button
               mt={4}
@@ -101,6 +110,7 @@ export default function DocumentCard({
               rightIcon={<FaExternalLinkAlt />}
               onClick={viewDocument}
               isLoading={loading}
+              isDisabled={showMint}
             >
               View Document
             </Button>

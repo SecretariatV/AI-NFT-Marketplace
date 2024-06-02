@@ -22,6 +22,8 @@ import {
 } from "@/utils/helpers";
 import { useDisclosure } from "@chakra-ui/react";
 import AgentFactory from "@/utils/AgentFactory.json";
+import AgentTemplate from "@/utils/Agent.json";
+import { formatUnits } from "viem";
 
 interface GlobalContextType {
   isCollapsed: boolean;
@@ -100,29 +102,57 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     const fetchAgents = async () => {
-      let metadata: any;
-      const factoryContract = process.env
-        .NEXT_PUBLIC_AGENTFACTORY_ADDRESS as `0x${string}`;
-      const agentInfo = await callReadContract(
-        factoryContract,
-        "getAgentsByCreator",
-        AgentFactory.abi,
-        [embeddedWallet?.address as `0x${string}`]
-      );
+      try {
+        const factoryContract = process.env
+          .NEXT_PUBLIC_AGENTFACTORY_ADDRESS as `0x${string}`;
+        const agentFactory = await callReadContract(
+          factoryContract,
+          "getAgentsByCreator",
+          AgentFactory.abi,
+          [embeddedWallet?.address as `0x${string}`]
+        );
 
-      if (agentInfo) {
-        setAgents(agentInfo);
+        if (agentFactory) {
+          const agentPromises = agentFactory.map(async (agent: any) => {
+            const agentAddress = agent.agentAddress;
+            const agentInfo = await callReadContract(
+              agentAddress,
+              "getIndexInfo",
+              AgentTemplate.abi,
+              []
+            );
+
+            if (agentInfo) {
+              const agentMetaData = await fetchContent(agent.cid);
+              return {
+                ...agent,
+                metadata: agentMetaData ?? null,
+                count: Number(agentInfo[2]),
+                version: Number(agentInfo[1]),
+              };
+            }
+
+            return null;
+          });
+
+          const resolvedAgents = await Promise.all(agentPromises);
+          setAgents(resolvedAgents.filter((agent) => agent !== null));
+        }
+      } catch (error) {
+        console.error("Error fetching agents:", error);
       }
     };
 
     if (embeddedWallet && !agents) {
       fetchAgents();
     }
-
-    if (agents) {
-      console.log("agents data", agents);
-    }
   }, [embeddedWallet, agents]);
+
+  useEffect(() => {
+    if (agents) {
+      console.log("loaded agents", agents);
+    }
+  }, [agents]);
 
   async function smartAccountClient() {
     if (!authenticated) {

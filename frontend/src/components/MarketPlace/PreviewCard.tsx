@@ -1,18 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-  Avatar,
-  Box,
-  Button,
-  Center,
-  HStack,
-  Text,
-  Divider,
-  Flex,
-  Stack,
-} from "@chakra-ui/react";
-import { FaPenFancy } from "react-icons/fa";
+import { Box, Text } from "@chakra-ui/react";
+
 import { useRouter } from "next/router";
-import { shortenAddress } from "@/utils/helpers";
 
 export default function PreviewCard({ nft }: { nft: any }) {
   const router = useRouter();
@@ -36,8 +25,6 @@ export default function PreviewCard({ nft }: { nft: any }) {
     }
   }, [nft.metadata.thumbnail, image]);
 
-  console.log(nft);
-
   return (
     <Box position={"relative"}>
       <Box
@@ -56,13 +43,20 @@ export default function PreviewCard({ nft }: { nft: any }) {
         backgroundSize="cover"
         backgroundPosition="center"
       >
-        <Box h="85%" position={"relative"} mx={1}>
+        <Box
+          h="100%"
+          position={"relative"}
+          mx={1}
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"flex-end"}
+        >
           {image && (
             <Box
               zIndex={0}
               position={"absolute"}
               top={0}
-              h="70%"
+              h="100%"
               opacity={0.9}
               color={"white"}
               borderRadius={"18px"}
@@ -70,43 +64,33 @@ export default function PreviewCard({ nft }: { nft: any }) {
               maxW="220px"
               src={image}
               as="img"
+              transition="height 0.3s ease"
+              _hover={{ h: "65%" }}
             />
           )}
 
           <Box
-            borderTopRadius={"18px"}
             borderBottomRadius={"30px"}
             w="100%"
-            h="70%"
-            // bg="rgba(24, 24, 24, 0.3)"
-            bg="linear-gradient(135deg, rgba(24, 24, 24, 0.3), rgba(74, 74, 74,0.3))"
+            mb={-4}
+            bottom={0}
+            h="45%"
+            bg="transparent"
             display={"flex"}
             flexDir={"column"}
-            justifyContent={"flex-end"}
+            justifyContent={"flex-start"}
+            pt={1}
             pb={4}
             px={3}
             color={"gray"}
-            position={"relative"}
-          >
-            <Flex align={"center"}>
-              {" "}
-              <span
-                style={{
-                  marginRight: "4px",
-                }}
-              >
-                <FaPenFancy color={"white"} size={"9px"} />
-              </span>
-              <Text fontSize={"xs"} color={"white"}>
-                {" "}
-                {shortenAddress(nft.metadata.author || "")}
-              </Text>
-            </Flex>
-          </Box>
+            alignItems={"flex-end"}
+            position={"absolute"}
+          />
 
           <Text mt={2} px={4} fontSize={"sm"} noOfLines={1}>
             {nft.metadata.title}
           </Text>
+
           <Text mt={2} px={4} fontSize={"xs"} color={"gray"} noOfLines={2}>
             {nft.metadata.description}
           </Text>

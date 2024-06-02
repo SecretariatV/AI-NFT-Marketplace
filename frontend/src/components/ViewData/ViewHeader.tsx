@@ -1,8 +1,9 @@
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex, Spinner, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { BiStore } from "react-icons/bi";
+import { FaInfo, FaInfoCircle } from "react-icons/fa";
 
-export default function ViewHeader() {
+export default function ViewHeader({ checking }: { checking: boolean }) {
   const router = useRouter();
 
   return (
@@ -30,7 +31,11 @@ export default function ViewHeader() {
         </Button>
       </Flex>
 
-      <Box mt={8}>About this document</Box>
+      <Flex align={"center"} mt={8}>
+        {checking ? <Spinner /> : <FaInfoCircle />}
+
+        <Text ml={4}>About this document</Text>
+      </Flex>
     </>
   );
 }

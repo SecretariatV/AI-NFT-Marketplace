@@ -3,7 +3,11 @@ import { Stack, useDisclosure, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
-import { extractTextFromFile, fetchContent } from "@/utils/helpers";
+import {
+  callReadContract,
+  extractTextFromFile,
+  fetchContent,
+} from "@/utils/helpers";
 import { encodeFunctionData, getAddress, toHex } from "viem";
 import AddToKnowledgeBaseModal from "../Modals/AddToKnowledgeBaseModal";
 import { addDocument, queryDocument } from "@/utils/agent-creation";
@@ -15,6 +19,27 @@ import PreviewDocumentModal from "../Modals/PreviewModal";
 import DocumentCard from "./DocumentCard";
 import ConsumeCard from "./ConsumeCard";
 import ViewHeader from "./ViewHeader";
+import { CovalentClient } from "@covalenthq/client-sdk";
+
+const nftAbi = [
+  {
+    constant: true,
+    inputs: [
+      {
+        name: "_owner",
+        type: "address",
+      },
+    ],
+    name: "balanceOf",
+    outputs: [
+      {
+        name: "balance",
+        type: "uint256",
+      },
+    ],
+    type: "function",
+  },
+];
 
 export default function ViewData() {
   const { index, nftData } = useGlobalContext();
@@ -30,23 +55,23 @@ export default function ViewData() {
   const [searching, setSearching] = useState(true);
   const [hasNFT, setHasNFT] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isPermitted, setIsPermitted] = useState(false);
+  const [checkingPermission, setCheckingPermission] = useState(true);
   const toast = useToast();
   const embeddedWallet = wallets.find(
     (wallet) => wallet.walletClientType !== "privy"
   );
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState<any | string | null>(null);
 
   const { id } = router.query;
 
   useEffect(() => {
     function filter() {
       const filter = nftData.filter((nft: any) => nft.id === id);
-
       if (filter && filter.length > 0) {
         // console.log("nfttt", filter);
         setNft(filter[0]);
       }
-
       setSearching(false);
     }
 
@@ -61,6 +86,23 @@ export default function ViewData() {
       filter();
     }
   }, [id, nftData, searching, nft]);
+
+  useEffect(() => {
+    const checkBalance = async () => {
+      const resp = await callReadContract(nft.nftAddress, "balanceOf", nftAbi, [
+        embeddedWallet?.address,
+      ]);
+      if (Number(resp) > 0) {
+        setCheckingPermission(false);
+        setHasNFT(true);
+      } else {
+        setHasNFT(false);
+      }
+    };
+    if (nft && checkingPermission) {
+      checkBalance();
+    }
+  }, [checkingPermission, nft]);
 
   const handleConsume = async () => {
     if (!embeddedWallet?.address) {
@@ -172,7 +214,7 @@ export default function ViewData() {
 
   return (
     <>
-      <ViewHeader />
+      <ViewHeader checking={checkingPermission} />
 
       {nft && (
         <>
@@ -181,19 +223,27 @@ export default function ViewData() {
             spacing={4}
             direction={["column-reverse", "row-reverse"]}
           >
-            <ConsumeCard onOpen={onOpen} />
+            <ConsumeCard
+              onOpen={onOpen}
+              hasNFT={hasNFT}
+              isDisabled={!content}
+            />
 
             <DocumentCard
               nft={nft}
               loading={loading}
               mintDocument={mintDocument}
               viewDocument={viewDocument}
+              checkMint={checkingPermission}
+              showMint={!hasNFT}
+              // hasNFT={hasNFT}
             />
           </Stack>
 
           <AddToKnowledgeBaseModal
             isOpen={isOpen}
             onClose={onClose}
+            isDisabled={!content}
             onSumbit={handleConsume}
           />
         </>

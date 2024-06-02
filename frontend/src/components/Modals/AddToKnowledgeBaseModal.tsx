@@ -19,10 +19,12 @@ const AddToKnowledgeBaseModal = ({
   isOpen,
   onClose,
   onSumbit,
+  isDisabled,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onSumbit: () => void;
+  isDisabled: boolean;
 }) => {
   const [agent, setAgent] = useState(
     "0xBf3F71C795aB263306e0Efd7f040F6a75b4Ff9c0"

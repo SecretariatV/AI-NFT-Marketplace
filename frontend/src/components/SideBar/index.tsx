@@ -50,7 +50,7 @@ export default function SideBar() {
               fontSize={"3xl"}
               fontWeight={"light"}
               letterSpacing={"1.25px"}
-              color={"#D968D0"}
+              color={"white"}
             >
               ZeroAI
             </Text>

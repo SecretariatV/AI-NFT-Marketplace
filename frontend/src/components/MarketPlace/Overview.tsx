@@ -1,14 +1,35 @@
-import { Box, Text, Flex, Stack, HStack } from "@chakra-ui/react";
+import { Box, Text, Flex, Stack, HStack, Center } from "@chakra-ui/react";
 import { FaPlay, FaUser } from "react-icons/fa";
 import Headers from "@/components/Headers";
 import { MdTrendingUp } from "react-icons/md";
 import { useRouter } from "next/router";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import PreviewCard from "./PreviewCard";
+import { useEffect, useState } from "react";
 
 export default function Overview() {
-  const { index, nftData, loadingMarket, setNftData } = useGlobalContext();
+  const { index, nftData, agents, loadingMarket, setNftData } =
+    useGlobalContext();
+  const [nft, setNft] = useState();
+  // const [searching, setSearching] = useState(false)
   const router = useRouter();
+
+  useEffect(() => {
+    function filter() {
+      const filter = agents.filter((agent: any) => agent.count > 0);
+
+      if (filter && filter.length > 0) {
+        const length = filter.length;
+        const lastViewed = filter[length - 1];
+        console.log("this is the chosen agent", lastViewed);
+        setNft(lastViewed);
+      }
+    }
+
+    if (agents) {
+      filter();
+    }
+  }, []);
 
   return (
     <>
@@ -44,19 +65,15 @@ export default function Overview() {
           py={4}
           px={8}
           minH="370px"
-          bg="#1f2022"
+          bg={!nftData ? "#1f2022" : "url('/start-selling.png')"}
+          backgroundSize={"cover"}
+          backgroundPosition={"center"}
           color={"white"}
           borderRadius={"18px"}
           w={["100%", "100%", "55%"]}
           onClick={() => router.push("/creators")}
           cursor="pointer"
-        >
-          <Headers
-            icon={<FaUser size={"lg"} />}
-            title="Creators"
-            bg="#1e1f23"
-          />
-        </Box>
+        />
 
         <Box
           py={4}
@@ -66,6 +83,7 @@ export default function Overview() {
           color={"white"}
           borderRadius={"18px"}
           w="100%"
+          position={"relative"}
         >
           <Flex align={"center"} justifyContent={"space-between"}>
             <Headers
@@ -89,6 +107,10 @@ export default function Overview() {
               Show All
             </Text>
           </Flex>
+
+          <Center mt={12}>
+            <Box h="120px" w="auto" as="img" src="/empty.svg" />
+          </Center>
         </Box>
       </Stack>
     </>
