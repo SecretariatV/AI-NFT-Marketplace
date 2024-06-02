@@ -118,17 +118,17 @@ export default function PublishingStatus({
               <Button
                 mt={12}
                 _hover={{
-                  bgGradient: "linear(to-r, #D968D0, #EB4634)",
+                  bgGradient: "linear(to-r, #c5ff49, #04b670)",
                   color: "white",
                   border: "none",
                 }}
                 sx={{
-                  bgGradient: "linear(to-r, #D968D0, #EB4634)",
+                  bgGradient: "linear(to-r, #c5ff49, #04b670)",
                   color: "white",
                   border: "none",
                 }}
                 _active={{
-                  bgGradient: "linear(to-r, #D968D0, #EB4634)",
+                  bgGradient: "linear(to-r, #c5ff49, #04b670)",
                   color: "white",
                   border: "none",
                 }}

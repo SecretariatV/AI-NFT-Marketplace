@@ -100,7 +100,7 @@ export default function Overview() {
               letterSpacing={"1.25px"}
               as="button"
               _hover={{
-                color: "#d968d0",
+                color: "#c5ff49",
               }}
               onClick={() => router.push("views")}
             >

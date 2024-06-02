@@ -65,12 +65,12 @@ export default function NavBar() {
           <Flex align={"center"} gap={5}>
             {index === 1 && (
               <Button
-                color={"#D968D0"}
-                border={"1.25px solid #D968D0"}
-                bgClip={"linear(to-r, #D968D0, #EB4634)"}
+                color={"#c5ff49"}
+                border={"1.25px solid #c5ff49"}
+                bgClip={"linear(to-r, #c5ff49, #04b670)"}
                 bg="transparent"
                 _hover={{
-                  bgGradient: "linear(to-r, #D968D0, #EB4634)",
+                  bgGradient: "linear(to-r, #c5ff49, #04b670)",
                   color: "white",
                   border: "none",
                 }}

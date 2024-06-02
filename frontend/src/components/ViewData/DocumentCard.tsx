@@ -103,7 +103,7 @@ export default function DocumentCard({
               h="50px"
               fontSize={"lg"}
               fontWeight={"bold"}
-              colorScheme="pink"
+              colorScheme="green"
               variant={"outline"}
               w="100%"
               maxW={"400px"}

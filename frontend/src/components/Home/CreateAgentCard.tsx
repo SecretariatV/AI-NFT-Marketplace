@@ -25,7 +25,7 @@ export default function CreateAgentCard() {
         // mx={4}
       />
       <Box
-        bgGradient="linear(to-r, rgba(217, 104, 208,0.2), rgba(235, 70, 52,0.2))"
+        bgGradient="linear(to-r, rgba(182, 248, 79,0.2), rgba(4, 182, 112,0.2))"
         borderRadius={"15px"}
         py={12}
         // mx={4}
@@ -55,30 +55,9 @@ export default function CreateAgentCard() {
           top={0}
           left={8}
         >
-          {/* <Avatar
-            opacity={0.6}
-            icon={<FaRobot />}
-            h="50px"
-            rounded={"full"}
-            border={"2px solid #1f2022"}
-            w="50px"
-            color={"#1f2022"}
-            bg="whitesmoke"
-          /> */}
           <Box mb={12}>
-            <FaRobot color="#db65c1" fontSize={"70px"} />
+            <FaRobot color="#c5ff49" fontSize={"70px"} />
           </Box>
-
-          {/* <Text
-            ml="3"
-            opacity={0.7}
-            fontSize={"3xl"}
-            fontWeight={"light"}
-            letterSpacing={"1.25px"}
-            color={"#1f2022"}
-          >
-            ZeroAI
-          </Text> */}
         </Box>
 
         <Box px={[4, 4, 8]} textAlign="left" w="100%" mt={4}>
@@ -86,10 +65,12 @@ export default function CreateAgentCard() {
             Clone and fine tune your AI agent
           </Text>
           <Button
-            bgGradient="linear(to-r, #D968D0, #EB4634)"
+            sx={{
+              bgGradient: "linear(to-r, #c5ff49, #04b670)",
+            }}
             mt={4}
             h="50px"
-            colorScheme="purple"
+            colorScheme="green"
             onClick={onOpen}
           >
             Get Started

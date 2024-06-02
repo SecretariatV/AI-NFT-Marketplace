@@ -71,7 +71,7 @@ export default function PublishInputs({
             <TabIndicator
               mt="-1.5px"
               height="2px"
-              bg="#D968D0"
+              bg="#c5ff49"
               borderRadius="1px"
             />
 
@@ -154,7 +154,7 @@ export default function PublishInputs({
                 border={"1px solid #3d3d3d"}
                 h="60px"
                 name="nftTitle"
-                focusBorderColor="#D968D0"
+                focusBorderColor="#c5ff49"
                 value={values.nftTitle}
                 onChange={handleInput}
               />
@@ -344,7 +344,7 @@ export default function PublishInputs({
               w="100%"
               mt={4}
               h="60px"
-              bgGradient="linear(to-r, #D968D0, #EB4634)"
+              bgGradient="linear(to-r, #c5ff49, #04b670)"
               colorScheme="purple"
               onClick={publish}
               fontSize={"xl"}

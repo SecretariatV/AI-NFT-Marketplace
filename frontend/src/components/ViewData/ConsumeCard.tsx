@@ -49,15 +49,15 @@ export default function ConsumeCard({
         >
           <Button
             sx={{
-              bgGradient: "linear(to-r, #D968D0, #EB4634)",
+              bgGradient: "linear(to-r, #c5ff49, #04b670)",
               color: "white",
             }}
             _hover={{
-              bgGradient: "linear(to-r, #D968D0, #EB4634)",
+              bgGradient: "linear(to-r, #c5ff49, #04b670)",
               color: "white",
             }}
             _active={{
-              bgGradient: "linear(to-r, #D968D0, #EB4634)",
+              bgGradient: "linear(to-r, #c5ff49, #04b670)",
               color: "white",
             }}
             borderRadius={"25px"}

@@ -90,7 +90,7 @@ export default function Results({ nft }: { nft: any }) {
               color="white"
               colorScheme="purple"
               sx={{
-                bgGradient: "linear(to-r, #D968D0, #EB4634)",
+                bgGradient: "linear(to-r, #c5ff49, #04b670)",
               }}
               onClick={() => router.push(`/views/${nft.id}`)}
             >

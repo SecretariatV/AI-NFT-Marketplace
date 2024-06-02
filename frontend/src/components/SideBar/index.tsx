@@ -39,21 +39,23 @@ export default function SideBar() {
             icon={<FaRobot />}
             h="50px"
             rounded={"full"}
-            border={"2px solid #D968D0"}
+            border={"2px solid #c5ff49"}
             w="50px"
-            color={"#D968D0"}
+            color={"#c5ff49"}
             bg="whiteAlpha.900"
           />
           {!isCollapsed && (
-            <Text
-              ml="3"
-              fontSize={"3xl"}
-              fontWeight={"light"}
-              letterSpacing={"1.25px"}
-              color={"white"}
-            >
-              ZeroAI
-            </Text>
+            // <Text
+            //   ml="3"
+            //   fontSize={"3xl"}
+            //   fontWeight={"light"}
+            //   letterSpacing={"1.25px"}
+            //   color={"white"}
+            // >
+            //   ZeroAI
+            // </Text>
+
+            <Box ml={3} as="img" src="/logo.svg" h="35px" w="auto" />
           )}
         </Box>
 
@@ -89,7 +91,7 @@ export default function SideBar() {
                   rounded={"full"}
                   w="30px"
                   bg="#1e1f23"
-                  color={index === i ? "#D968D0" : "#7c8693"}
+                  color={index === i ? "#c5ff49" : "#7c8693"}
                 />
 
                 {!isCollapsed && (
@@ -98,7 +100,7 @@ export default function SideBar() {
                     fontSize={"md"}
                     fontWeight={"bold"}
                     letterSpacing={"1.25px"}
-                    color={index === i ? "#D968D0" : "#7c8693"}
+                    color={index === i ? "#c5ff49" : "#7c8693"}
                   >
                     {item.title}
                   </Text>
