@@ -25,6 +25,7 @@ export const deployNFTContract = async (
   ownerAddress: string,
   nonce: string,
   provider: any,
+  price: string,
   smartAccount?: any
 ) => {
   if (!provider) {
@@ -36,13 +37,12 @@ export const deployNFTContract = async (
     chain: sepolia,
     transport: http(),
   });
-  
 
   const nftFactoryAddress = process.env.NEXT_PUBLIC_NFTFACTORY_ADDRESS;
   const deployNFTCallData = encodeFunctionData({
     abi: NFTFactory.abi,
     functionName: "deployNFT",
-    args: [getAddress(ownerAddress), parseEther("0.0001"), nonce],
+    args: [getAddress(ownerAddress), parseEther(price), nonce],
   });
 
   const transaction = {

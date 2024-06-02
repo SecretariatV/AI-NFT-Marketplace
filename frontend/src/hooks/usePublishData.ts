@@ -103,7 +103,8 @@ export const usePublishData = () => {
       const deployResponse = await deployNFTContract(
         ownerAddress,
         nonce,
-        provider
+        provider,
+        ethPrice
       );
 
       if (!deployResponse) {
@@ -242,68 +243,3 @@ export const usePublishData = () => {
     generateThumbnail,
   };
 };
-
-// const publish = async () => {
-//   if (!file) {
-//     console.log("please upload a valid document");
-//     return;
-//   }
-
-//   const smartAccount = await smartAccountClient();
-//   const ownerAddress = embeddedWallet?.address!;
-//   const provider = await embeddedWallet?.getEthereumProvider();
-//   const litNodeClient = await getlitNodeClient();
-//   const nonce = await litNodeClient.getLatestBlockhash();
-
-//   console.log(ownerAddress);
-//   const predictedNFTAddress = await computeCreate2Address(
-//     ownerAddress,
-//     "0.0001",
-//     nonce
-//   );
-
-//   const deployResponse = await deployNFTContract(
-//     ownerAddress,
-//     nonce,
-//     provider
-//   );
-
-//   if (!deployResponse) {
-//     console.log("Could not deploy NFT contract");
-//     return;
-//   }
-
-//   const authSig = await getAuthSig(
-//     await embeddedWallet?.getEthersProvider(),
-//     ownerAddress,
-//     sepolia.id.toString(),
-//     nonce
-//   );
-
-//   const encryptedJSON = await encryptFileWithLitProtocol(
-//     authSig,
-//     ownerAddress,
-//     predictedNFTAddress,
-//     litNodeClient,
-//     file
-//   );
-
-//   const metadata = await uploadEncryptedFile(encryptedJSON, ownerAddress, {
-//     nftTitle,
-//     description,
-//     category,
-//     coverImage,
-//   });
-
-//   const metaDataCID = await uploadMetadata(metadata);
-
-//   console.log("metaData CID", metaDataCID);
-
-//   const updateResponse = await updateNFTCID(
-//     predictedNFTAddress,
-//     metaDataCID,
-//     ownerAddress,
-//     provider
-//   );
-//   console.log(updateResponse);
-// };

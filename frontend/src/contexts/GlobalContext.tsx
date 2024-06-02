@@ -24,7 +24,6 @@ import { useDisclosure } from "@chakra-ui/react";
 import AgentFactory from "@/utils/AgentFactory.json";
 import AgentTemplate from "@/utils/Agent.json";
 
-
 interface GlobalContextType {
   isCollapsed: boolean;
   setIsCollapsed: (isCollapsed: boolean) => void;
@@ -73,6 +72,7 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
           const details = await getDetailsFromNFTContract(
             (nft as any).nftAddress
           );
+          // console.log(details);
           if (!details) {
             return null;
           }
@@ -84,7 +84,9 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
           }
         })
       );
-      if (detailedData && detailedData.length > 4) {
+
+      console.log(await data.nftdeployeds);
+      if (detailedData) {
         // console.log("details data", detailedData);
         // setNftData(detailedData);
         setNftData(detailedData.filter((item) => item !== null));

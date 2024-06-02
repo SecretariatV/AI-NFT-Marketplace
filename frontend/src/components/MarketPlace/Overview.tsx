@@ -29,11 +29,10 @@ export default function Overview() {
       if (filter && filter.length > 0) {
         const length = filter.length;
         const lastViewed = filter[length - 1];
-        console.log("this is the chosen agent", lastViewed);
+        // console.log("this is the chosen agent", lastViewed);
         setNft(lastViewed);
       }
     }
-
     if (agents) {
       filter();
     }
@@ -123,7 +122,7 @@ export default function Overview() {
               _hover={{
                 color: "#c5ff49",
               }}
-              onClick={() => router.push("views")}
+              // onClick={() => router.push("views")}
             >
               Show All
             </Text>
