@@ -5,9 +5,11 @@ export const steps = [
 ];
 
 export const templates = [
-  { title: "Pirate OOze", description: "bicomist Info", icon: "/pirate.svg" },
-  { title: "Alien", description: "Date & Time", icon: "/alien.svg" },
-  { title: "Wizard", description: "Select Rooms", icon: "/wizard.svg" },
+  {
+    title: "Captain Blackbeard",
+    description: "bicomist Info",
+    icon: "/pirate.svg",
+  },
+  { title: "Nebula", description: "Date & Time", icon: "/alien.svg" },
+  { title: "Vitalic Merlin", description: "Select Rooms", icon: "/wizard.svg" },
 ];
-
-

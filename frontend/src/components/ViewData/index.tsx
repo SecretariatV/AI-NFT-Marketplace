@@ -55,7 +55,8 @@ export default function ViewData() {
   const [searching, setSearching] = useState(true);
   const [hasNFT, setHasNFT] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isPermitted, setIsPermitted] = useState(false);
+  const [unlocking, setUnlocking] = useState(false);
+  // const [isPermitted, setIsPermitted] = useState(false);
   const [checkingPermission, setCheckingPermission] = useState(true);
   const toast = useToast();
   const embeddedWallet = wallets.find(
@@ -97,6 +98,7 @@ export default function ViewData() {
         setHasNFT(true);
       } else {
         setHasNFT(false);
+        setCheckingPermission(false);
       }
     };
     if (nft && checkingPermission) {
@@ -146,6 +148,7 @@ export default function ViewData() {
         });
 
         setLoading(false);
+        router.reload();
         return;
       } catch (e) {
         setLoading(false);
@@ -170,6 +173,7 @@ export default function ViewData() {
     }
 
     try {
+      setUnlocking(true);
       const litNodeClient = await getlitNodeClient();
       const nonce = await litNodeClient.getLatestBlockhash();
 
@@ -204,11 +208,13 @@ export default function ViewData() {
           // setFileContent(textContent);
           setContent(textContent);
           onOpenPreview();
+          setUnlocking(false);
         };
         reader.readAsArrayBuffer(file);
       }
     } catch (e) {
       console.log("error trying to view document", e);
+      setUnlocking(false);
     }
   };
 
@@ -236,7 +242,7 @@ export default function ViewData() {
               viewDocument={viewDocument}
               checkMint={checkingPermission}
               showMint={!hasNFT}
-              // hasNFT={hasNFT}
+              unlocking={unlocking}
             />
           </Stack>
 

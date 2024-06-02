@@ -11,7 +11,7 @@ export default function DocumentCard({
   viewDocument,
   checkMint,
   showMint,
-  // hasNFT
+  unlocking,
 }: {
   nft: any;
   loading: boolean;
@@ -19,7 +19,7 @@ export default function DocumentCard({
   viewDocument: () => void;
   checkMint: boolean;
   showMint: boolean;
-  // hasNFT: boolean;
+  unlocking: boolean;
 }) {
   return (
     <>
@@ -109,7 +109,7 @@ export default function DocumentCard({
               maxW={"400px"}
               rightIcon={<FaExternalLinkAlt />}
               onClick={viewDocument}
-              isLoading={loading}
+              isLoading={unlocking}
               isDisabled={showMint}
             >
               View Document

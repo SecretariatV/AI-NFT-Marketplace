@@ -23,7 +23,7 @@ import {
 import { useDisclosure } from "@chakra-ui/react";
 import AgentFactory from "@/utils/AgentFactory.json";
 import AgentTemplate from "@/utils/Agent.json";
-import { formatUnits } from "viem";
+
 
 interface GlobalContextType {
   isCollapsed: boolean;

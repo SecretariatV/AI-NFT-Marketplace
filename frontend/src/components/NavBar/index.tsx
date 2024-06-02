@@ -16,7 +16,7 @@ import ErrorDialog from "../Modals/errorDialog";
 
 export default function NavBar() {
   const router = useRouter();
-  const { ready, authenticated, login, logout } = usePrivy();
+  const { ready, authenticated, connectWallet, login, logout } = usePrivy();
   const { isCollapsed, setIsCollapsed, index } = useGlobalContext();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const [isError, setIsError] = useState(false);
@@ -77,8 +77,7 @@ export default function NavBar() {
                 h="50px"
                 colorScheme="purple"
                 leftIcon={<MdAttachMoney />}
-                onClick={authenticated ?  () => router.push("/publish") : login}
-
+                onClick={authenticated ? () => router.push("/publish") : login}
               >
                 Start Selling
               </Button>
@@ -89,15 +88,23 @@ export default function NavBar() {
               bg="#212529"
               _hover={{
                 bg: "#212529",
-                color: "white"
+                color: "white",
               }}
               _active={{
                 bg: "#212529",
-                color: "white"
+                color: "white",
               }}
               h="50px"
               isDisabled={!ready}
-              onClick={authenticated ? logoutWarning : login}
+              onClick={
+                authenticated
+                  ? logoutWarning
+                  : async () => {
+                      login();
+                      // connectWallet;
+                    }
+              }
+              // onClick={connectWallet}
             >
               {authenticated ? "Disconnect" : "  Connect Wallet"}
             </Button>

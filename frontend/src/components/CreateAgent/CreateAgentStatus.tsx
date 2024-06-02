@@ -68,7 +68,7 @@ export default function CreateAgentStatus({
           </Center>
         )}
 
-        {!isLoading && !agent && (
+        {!isLoading && agent && (
           <>
             <VStack>
               <Box textAlign={"center"} maxW={"500px"}>

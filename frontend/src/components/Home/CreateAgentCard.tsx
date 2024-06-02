@@ -83,7 +83,7 @@ export default function CreateAgentCard() {
 
         <Box px={[4, 4, 8]} textAlign="left" w="100%" mt={4}>
           <Text fontSize={"xl"} fontWeight={"semibold"} color={"#333"}>
-            Craft and fine tune your agent
+            Clone and fine tune your AI agent
           </Text>
           <Button
             bgGradient="linear(to-r, #D968D0, #EB4634)"

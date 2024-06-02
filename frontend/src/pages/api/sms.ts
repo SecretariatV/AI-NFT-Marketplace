@@ -4,6 +4,14 @@ import { removePrefix, startsWithEthereumAddress } from "@/utils/chatHelper";
 import Agent from "@/utils/Agent.json";
 import { createPublicClient, getAddress, http } from "viem";
 import { sepolia } from "viem/chains";
+import twilio from "twilio";
+
+const apiKeySid = process.env.TWILIO_API_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const accountSid = process.env.TWILIO_AUTH_TOKEN;
+const client = twilio(accountSid, authToken);
+
+//TODO: Twilio client can only respond to domestic text messages
 
 export default async function handler(
   req: NextApiRequest,
