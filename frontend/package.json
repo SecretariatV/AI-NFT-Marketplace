@@ -24,7 +24,6 @@
     "@privy-io/react-auth": "^1.66.2",
     "axios": "^1.7.2",
     "blueband-db": "https://github.com/acgodson/blueband.git#main",
-    "core": "link:@langchain/core",
     "framer-motion": "^11.2.6",
     "graphql": "^16.8.1",
     "langchain": "^0.1.26",
@@ -34,7 +33,9 @@
     "react-dom": "^18",
     "react-icons": "^5.2.1",
     "twilio": "^5.1.0",
-    "viem": "^2.13.1"
+    "viem": "^2.13.1",
+    "@chainlink/functions-toolkit": "^0.2.7",
+    "ethers": "^5.7.2"
   },
   "devDependencies": {
     "@types/node": "^20",

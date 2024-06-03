@@ -7,8 +7,8 @@ import {
   http,
 } from "viem";
 import { sepolia } from "viem/chains";
-import NFTFactory from "@/utils/NFTFactory.json";
-import NFT from "@/utils/NFT.json";
+import NFTFactory from "@/contracts/abi/NFTFactory.json";
+import NFT from "@/contracts/abi/NFT.json";
 import { PaymasterMode } from "@biconomy/account";
 import { ethConnect } from "@lit-protocol/lit-node-client";
 import lighthouse from "@lighthouse-web3/sdk";

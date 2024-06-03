@@ -21,8 +21,8 @@ import {
   getDetailsFromNFTContract,
 } from "@/utils/helpers";
 import { useDisclosure } from "@chakra-ui/react";
-import AgentFactory from "@/utils/AgentFactory.json";
-import AgentTemplate from "@/utils/Agent.json";
+import AgentFactory from "@/contracts/abi/AgentFactory.json";
+import AgentTemplate from "@/contracts/abi/Agent.json";
 
 interface GlobalContextType {
   isCollapsed: boolean;

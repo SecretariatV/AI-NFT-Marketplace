@@ -7,8 +7,8 @@ import {
   encodeFunctionData,
 } from "viem";
 import { sepolia } from "viem/chains";
-import NFTFactory from "./NFTFactory.json";
-import NFT from "./NFT.json";
+import NFTFactory from "@/contracts/abi/NFTFactory.json";
+import NFT from "@/contracts/abi/NFT.json";
 import axios from "axios";
 
 export function shortenAddress(address: string): string {

@@ -5,7 +5,6 @@ import {FunctionsClient} from "@chainlink/contracts/src/v0.8/functions/dev/v1_0_
 import {ConfirmedOwner} from "@chainlink/contracts/src/v0.8/shared/access/ConfirmedOwner.sol";
 
 contract Session is FunctionsClient, ConfirmedOwner {
-    address public upkeepContract;
     uint64 private subscriptionId;
     uint32 private gasLimit;
     bytes32 private donID;
@@ -31,17 +30,14 @@ contract Session is FunctionsClient, ConfirmedOwner {
 
     bytes32[] public activeRequests;
 
+    //store each reqID using hash as key
+
+    //map each users hash to a request
     mapping(bytes32 => Request) public requests;
     mapping(bytes32 => bytes32) public requestsIDs;
     mapping(bytes32 => Response) public responses;
 
     mapping(bytes32 => SessionData) public sessionData;
-
-    error NotAllowedCaller(
-        address caller,
-        address owner,
-        address automationRegistry
-    );
 
     //we can always listen to  the request ID and retrieve responses off-chain
     event SessionRequested(bytes32 indexed requestId, bytes32 indexed hash);
@@ -51,47 +47,70 @@ contract Session is FunctionsClient, ConfirmedOwner {
         bytes err
     );
 
-    constructor(address router)
-        FunctionsClient(router)
-        ConfirmedOwner(msg.sender)
-    {
-        subscriptionId = 4233;
+    constructor(
+        address router
+    ) FunctionsClient(router) ConfirmedOwner(msg.sender) {
+        subscriptionId = 3033;
         gasLimit = 300000;
-        donID = "fun-avalanche-fuji-1";
+        donID = "fun-ethereum-sepolia-1";
     }
 
-    function setAutomationCronContract(address _upkeepContract)
-        external
-        onlyOwner
-    {
-        require(_upkeepContract != address(0), "Invalid contract address");
-        upkeepContract = _upkeepContract;
-    }
+    //calls to start a session when one doesnt exist
+    function startSession(
+        bytes memory request,
+        bytes32 hash,
+        string memory cid
+    ) external {
+        if (isValidSession(hash)) {
+            sessionData[hash] = SessionData({
+                hash: bytes32(0),
+                startTime: 0,
+                ipnsRecord: cid
+            });
+        }
 
-    //manual trigger
-    function updateRequest(bytes memory _request, bytes32 hash) external {
-        requests[hash] = Request({
-            request: _request,
-            subscriptionId: subscriptionId,
-            gasLimit: gasLimit,
-            donID: donID
+        //init a session
+        sessionData[hash] = SessionData({
+            hash: hash,
+            startTime: block.timestamp,
+            ipnsRecord: cid
         });
-        addActiveRequest(hash);
+
+        updateRequest(request, hash);
     }
 
     function sendRequestCBOR() external {
         for (uint256 i = 0; i < activeRequests.length; i++) {
             bytes32 requestHash = activeRequests[i];
             Request storage req = requests[requestHash];
+
             bytes32 s_lastRequestId = _sendRequest(
                 req.request,
                 req.subscriptionId,
                 req.gasLimit,
                 req.donID
             );
+
             requestsIDs[requestHash] = s_lastRequestId;
-            emit SessionRequested(s_lastRequestId, requestHash);
+            removeActiveRequest(requestHash);
         }
+    }
+
+    //retrieve all pending IPNS creation requests
+    function getActiveRequests() external view returns (bytes32[] memory) {
+        return activeRequests;
+    }
+
+    //retrieve session of a hash
+    function getSession(bytes32 hash) external view returns (string memory) {
+        bytes32 id = requestsIDs[hash];
+        bytes memory response = responses[id].response;
+        string memory _ipnsID = string(response);
+        return _ipnsID;
+    }
+
+    function doesExist(bytes32 hash) public view returns (bool) {
+        return isValidSession(hash);
     }
 
     function fulfillRequest(
@@ -109,7 +128,13 @@ contract Session is FunctionsClient, ConfirmedOwner {
         emit ResponseReceived(requestId, response, err);
     }
 
-    function addActiveRequest(bytes32 hash) internal {
+    function updateRequest(bytes memory _request, bytes32 hash) internal {
+        requests[hash] = Request({
+            request: _request,
+            subscriptionId: subscriptionId,
+            gasLimit: gasLimit,
+            donID: donID
+        });
         activeRequests.push(hash);
     }
 
@@ -121,37 +146,6 @@ contract Session is FunctionsClient, ConfirmedOwner {
                 break;
             }
         }
-    }
-
-    function startSession(bytes32 hash, string memory cid) external onlyOwner {
-        if (isValidSession(hash)) {
-            sessionData[hash] = SessionData({
-                hash: bytes32(0),
-                startTime: 0,
-                ipnsRecord: cid
-            });
-        }
-
-        //init a session
-        sessionData[hash] = SessionData({
-            hash: hash,
-            startTime: block.timestamp,
-            ipnsRecord: cid
-        });
-
-        //init ipns request
-        addActiveRequest(hash);
-    }
-
-    function getIPNS(bytes32 hash)
-        external
-        view
-        returns (string memory balanceResult)
-    {
-        bytes32 id = requestsIDs[hash];
-        bytes memory response = responses[id].response;
-
-        return string(response);
     }
 
     function isValidSession(bytes32 hash) internal view returns (bool) {

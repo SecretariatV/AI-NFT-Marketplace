@@ -3,8 +3,8 @@ import { privateKeyToAccount } from "viem/accounts";
 import { sepolia } from "viem/chains";
 import { createIndex, addDocuments, queryIndex } from "blueband-db";
 import { uploadMetadata } from "./marketplace";
-import AgentFactory from "@/utils/AgentFactory.json";
-import Agent from "@/utils/Agent.json";
+import AgentFactory from "@/contracts/abi/AgentFactory.json";
+import Agent from "@/contracts/abi/Agent.json";
 
 import { callReadContract, callWriteContract } from "./helpers";
 
