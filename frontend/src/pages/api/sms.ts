@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import { removePrefix, startsWithEthereumAddress } from "@/utils/chatHelper";
-import Agent from "@/utils/Agent.json";
+import Agent from "@/contracts/abi/Agent.json";
 import { createPublicClient, getAddress, http } from "viem";
 import { sepolia } from "viem/chains";
 import twilio from "twilio";

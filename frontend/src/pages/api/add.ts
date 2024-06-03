@@ -1,8 +1,8 @@
 import { callReadContract } from "@/utils/helpers";
 import { addDocuments } from "blueband-db";
 import type { NextApiRequest, NextApiResponse } from "next";
-import AgentFactory from "@/utils/AgentFactory.json";
-import Agent from "@/utils/Agent.json";
+import AgentFactory from "@/contracts/abi/AgentFactory.json";
+import Agent from "@/contracts/abi/Agent.json";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const uriList = ["zero-ai.wep.app"];

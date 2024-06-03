@@ -12,7 +12,7 @@ import { encodeFunctionData, getAddress, toHex } from "viem";
 import AddToKnowledgeBaseModal from "../Modals/AddToKnowledgeBaseModal";
 import { addDocument, queryDocument } from "@/utils/agent-creation";
 import { useWallets } from "@privy-io/react-auth";
-import NFT from "@/utils/NFT.json";
+import NFT from "@/contracts/abi/NFT.json";
 import { getAuthSig, getlitNodeClient } from "@/utils/marketplace";
 import { sepolia } from "viem/chains";
 import PreviewDocumentModal from "../Modals/PreviewModal";
