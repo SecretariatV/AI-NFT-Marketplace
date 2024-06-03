@@ -1,5 +1,4 @@
-import fs from "fs";
-import path from "path";
+
 import {
   SecretsManager,
   simulateScript,
@@ -10,14 +9,13 @@ import {
   Location,
   CodeLanguage,
 } from "@chainlink/functions-toolkit";
-// import ethers from "ethers";
 import sessionContractABi from "../abi/session.json";
 import viem from "viem";
 import chains from "viem/chains";
 import accounts from "viem/accounts";
 import { ethers } from "ethers";
 import { source } from "./source";
-require("@chainlink/env-enc").config();
+
 
 const routerAddress = "0xb83E47C2bC239B3bf370bc41e1459A34b41238D0";
 const donId = "fun-ethereum-sepolia-1";
