@@ -56,9 +56,6 @@ dependencies:
   blueband-db:
     specifier: https://github.com/acgodson/blueband.git#main
     version: github.com/acgodson/blueband/e7d759a47dab1d3beafda8823b926d6700e94dee(typescript@5.4.5)(zod@3.23.8)
-  core:
-    specifier: link:@langchain/core
-    version: link:@langchain/core
   ethers:
     specifier: ^5.7.2
     version: 5.7.2
