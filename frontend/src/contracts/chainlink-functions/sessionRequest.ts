@@ -5,7 +5,6 @@ import {
   buildRequestCBOR,
   ReturnType,
   decodeResult,
-  //@ts-ignore
   Location,
   CodeLanguage,
 } from "@chainlink/functions-toolkit";

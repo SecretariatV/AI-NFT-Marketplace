@@ -19,7 +19,7 @@ import PreviewDocumentModal from "../Modals/PreviewModal";
 import DocumentCard from "./DocumentCard";
 import ConsumeCard from "./ConsumeCard";
 import ViewHeader from "./ViewHeader";
-import { CovalentClient } from "@covalenthq/client-sdk";
+
 
 const nftAbi = [
   {
@@ -134,7 +134,7 @@ export default function ViewData() {
       try {
         const callData = encodeFunctionData({
           abi: NFT.abi,
-          functionName: "mintNFT",
+          functionName: "buyNFT"
         });
         const transaction = {
           to: getAddress(nft.nftAddress),

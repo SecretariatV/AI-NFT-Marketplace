@@ -1,27 +1,28 @@
 export const source = `
-const chain = args[0];
-const wallet = args[1];
-const token = args[2];
 const apiKey = secrets.apiKey;
 if (!apiKey) {
-  throw Error("Missing Covalent API key.");
+  throw Error("Missing Lighthouse API key.");
 }
-const url = \`https://api.covalenthq.com/v1/\${chain}/address/\${wallet}/balances_v2/?key=\${apiKey}\`;
-const covalentRequest = Functions.makeHttpRequest({
+
+const url = "https://api.lighthouse.storage/api/ipns/generate_key";
+const lighthouseRequest = Functions.makeHttpRequest({
   url: url,
+  method: "GET",
+  headers: {
+    Authorization: \`Bearer \${apiKey}\`,
+  },
 });
-const covalentResponse = await covalentRequest;
-if (covalentResponse.error) {
-  console.error(covalentResponse.error);
-  throw Error("Covalent API request failed");
+
+const lighthouseResponse = await lighthouseRequest;
+if (lighthouseResponse.error) {
+  console.error(lighthouseResponse.error);
+  throw Error("Lighthouse API request failed");
 }
-const data = covalentResponse.data;
-let tokenBalance = null;
-for (const item of data.data.items) {
-  if (item.contract_address.toLowerCase() === token.toLowerCase()) {
-    tokenBalance = item.balance;
-    break;
-  }
+const data = lighthouseResponse.data;
+if (!data || !data.ipnsId) {
+  throw Error("Failed to generate key");
 }
-return Functions.encodeUint256(BigInt(tokenBalance));
+
+return Functions.encodeString(data.ipnsId);
+
 `;

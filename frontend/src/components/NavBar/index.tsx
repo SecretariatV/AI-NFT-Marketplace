@@ -100,11 +100,10 @@ export default function NavBar() {
                 authenticated
                   ? logoutWarning
                   : async () => {
-                      // login();
-                      connectWallet();
+                      login();
+                      // connectWallet();
                     }
               }
-             
             >
               {authenticated ? "Disconnect" : "  Connect Wallet"}
             </Button>

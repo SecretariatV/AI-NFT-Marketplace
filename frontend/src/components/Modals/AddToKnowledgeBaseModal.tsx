@@ -27,7 +27,7 @@ const AddToKnowledgeBaseModal = ({
   isDisabled: boolean;
 }) => {
   const [agent, setAgent] = useState(
-    "0xBf3F71C795aB263306e0Efd7f040F6a75b4Ff9c0"
+    "0xb16656B579D293Ff3e36fD6BE6c5368120d7625D"
   );
   const handleSubmit = async () => {
     onSumbit();
