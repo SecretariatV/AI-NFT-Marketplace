@@ -41,7 +41,7 @@ const ErrorDialog: React.FC<ErrorDialogProps> = ({
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
-              Close
+              {title === 'Are you leaving' ? 'Log out' : 'Close'}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

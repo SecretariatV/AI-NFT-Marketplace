@@ -100,8 +100,8 @@ export default function NavBar() {
                 authenticated
                   ? logoutWarning
                   : async () => {
-                      login()
-                      // connectWallet();
+                      // login()
+                      connectWallet()
                     }
               }
             >
