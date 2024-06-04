@@ -58,11 +58,17 @@ export default function Overview() {
               bg="#1e1f23"
             />
 
-            <HStack w="100%" spacing={5}>
+            <HStack w="100%" spacing={5}
+            
+          overflowX={"auto"}
+
+            >
               {nftData
                 .filter((item: any) => item.cid.length > 0)
                 .map((nft: any, i: number) => (
-                  <PreviewCard key={i} nft={nft} />
+        <Box>
+                    <PreviewCard key={i} nft={nft} />
+          </Box>
                 ))}
             </HStack>
           </>

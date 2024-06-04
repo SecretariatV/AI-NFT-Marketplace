@@ -36,6 +36,7 @@ export default function PreviewCard({ nft }: { nft: any }) {
         borderRadius={'18px'}
         w="100%"
         maxW="220px"
+        minW="220px"
         justifyContent={'space-between'}
         cursor={'pointer'}
         onClick={() => router.push(`/views/${nft.id}`)}
