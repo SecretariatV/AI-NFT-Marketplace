@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 export const GET_NFT_DEPLOYED = gql`
   query GetNFTDeployed($first: Int) {
@@ -9,4 +9,4 @@ export const GET_NFT_DEPLOYED = gql`
       blockNumber
     }
   }
-`;
+`

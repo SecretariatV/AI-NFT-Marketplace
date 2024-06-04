@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef } from 'react'
 import {
   AlertDialog,
   AlertDialogBody,
@@ -6,18 +6,23 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  Button
-} from '@chakra-ui/react';
+  Button,
+} from '@chakra-ui/react'
 
 interface ErrorDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  message: string;
+  isOpen: boolean
+  onClose: () => void
+  title: string
+  message: string
 }
 
-const ErrorDialog: React.FC<ErrorDialogProps> = ({ isOpen, onClose, title, message }) => {
-  const cancelRef = useRef<HTMLButtonElement>(null);
+const ErrorDialog: React.FC<ErrorDialogProps> = ({
+  isOpen,
+  onClose,
+  title,
+  message,
+}) => {
+  const cancelRef = useRef<HTMLButtonElement>(null)
 
   return (
     <AlertDialog
@@ -32,9 +37,7 @@ const ErrorDialog: React.FC<ErrorDialogProps> = ({ isOpen, onClose, title, messa
             {title}
           </AlertDialogHeader>
 
-          <AlertDialogBody>
-            {message}
-          </AlertDialogBody>
+          <AlertDialogBody>{message}</AlertDialogBody>
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
@@ -44,7 +47,7 @@ const ErrorDialog: React.FC<ErrorDialogProps> = ({ isOpen, onClose, title, messa
         </AlertDialogContent>
       </AlertDialogOverlay>
     </AlertDialog>
-  );
-};
+  )
+}
 
-export default ErrorDialog;
+export default ErrorDialog

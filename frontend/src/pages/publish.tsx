@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Slide, Box } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import ErrorDialog from "@/components/Modals/errorDialog";
-import { usePublishData } from "@/hooks/usePublishData";
-import PublishHeader from "@/components/PublishMarket/PublishHeader";
-import PublishInputs from "@/components/PublishMarket/PublishInputs";
-import PublishingStatus from "@/components/PublishMarket/PublishingStatus";
-import { useGlobalContext } from "@/contexts/GlobalContext";
+import React, { useEffect, useState } from 'react'
+import { Slide, Box } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import ErrorDialog from '@/components/Modals/errorDialog'
+import { usePublishData } from '@/hooks/usePublishData'
+import PublishHeader from '@/components/PublishMarket/PublishHeader'
+import PublishInputs from '@/components/PublishMarket/PublishInputs'
+import PublishingStatus from '@/components/PublishMarket/PublishingStatus'
+import { useGlobalContext } from '@/contexts/GlobalContext'
 
 const PublishPage = () => {
-  const router = useRouter();
-  const { setIndex } = useGlobalContext();
+  const router = useRouter()
+  const { setIndex } = useGlobalContext()
 
   const {
     file,
@@ -35,7 +35,7 @@ const PublishPage = () => {
     generateThumbnail,
     publish,
     closeError,
-  } = usePublishData();
+  } = usePublishData()
   // close
   let values = {
     nftTitle,
@@ -46,7 +46,7 @@ const PublishPage = () => {
     prompt,
     termsChecked,
     progress,
-  };
+  }
 
   return (
     <Slide direction="left" in={true} style={{ zIndex: 10 }}>
@@ -93,8 +93,8 @@ const PublishPage = () => {
             progress={progress}
             nftAddress={nftAddress}
             close={() => {
-              setIndex(0);
-              router.push("/");
+              setIndex(0)
+              router.push('/')
             }}
           />
         )}
@@ -107,7 +107,7 @@ const PublishPage = () => {
         message={errorMessage}
       />
     </Slide>
-  );
-};
+  )
+}
 
-export default PublishPage;
+export default PublishPage

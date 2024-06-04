@@ -1,31 +1,31 @@
-import { useEffect, useState } from "react";
-import { Box, Button, HStack, Text, Flex } from "@chakra-ui/react";
-import { FaPenFancy } from "react-icons/fa";
-import { shortenAddress } from "@/utils/helpers";
-import { useRouter } from "next/router";
-import { formatEther } from "viem";
+import { useEffect, useState } from 'react'
+import { Box, Button, HStack, Text, Flex } from '@chakra-ui/react'
+import { FaPenFancy } from 'react-icons/fa'
+import { shortenAddress } from '@/utils/helpers'
+import { useRouter } from 'next/router'
+import { formatEther } from 'viem'
 
 export default function Results({ nft }: { nft: any }) {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [image, setImage] = useState<any | null>(null);
+  const [image, setImage] = useState<any | null>(null)
 
   useEffect(() => {
     async function fetchImage() {
-      const hash = nft.metadata.thumbnail;
+      const hash = nft.metadata.thumbnail
       const response = await fetch(
-        `https://gateway.lighthouse.storage/ipfs/${hash}`
-      );
+        `https://gateway.lighthouse.storage/ipfs/${hash}`,
+      )
       if (!response.ok) {
-        throw new Error("Failed to fetch content");
+        throw new Error('Failed to fetch content')
       }
-      const data = response.text();
-      setImage(await data);
+      const data = response.text()
+      setImage(await data)
     }
     if (nft.metadata.thumbnail.length > 2 && !image) {
-      fetchImage();
+      fetchImage()
     }
-  }, [nft.metadata.thumbnail, image]);
+  }, [nft.metadata.thumbnail, image])
   return (
     <>
       <Box mt={14} w="100%" maxW="400px">
@@ -33,36 +33,36 @@ export default function Results({ nft }: { nft: any }) {
           pb={4}
           h="400px"
           bg="#181818"
-          color={"white"}
-          borderRadius={"18px"}
+          color={'white'}
+          borderRadius={'18px'}
           w="100%"
           maxW="400px"
-          justifyContent={"space-between"}
-          cursor={"pointer"}
+          justifyContent={'space-between'}
+          cursor={'pointer'}
           onClick={() => router.push(`/views/${nft.id}`)}
         >
           <Box h="85%">
             <Box
-              border={"2px solid #181818"}
-              borderTopRadius={"18px"}
-              borderBottomRadius={"30px"}
+              border={'2px solid #181818'}
+              borderTopRadius={'18px'}
+              borderBottomRadius={'30px'}
               w="100%"
               h="70%"
               // backgroundColor="#121212"
-              display={"flex"}
-              flexDir={"column"}
-              justifyContent={"flex-end"}
+              display={'flex'}
+              flexDir={'column'}
+              justifyContent={'flex-end'}
               pb={4}
               px={3}
-              background={image ? `url('${image}')` : "#121212"}
-              backgroundSize={"cover"}
-              color={"gray"}
+              background={image ? `url('${image}')` : '#121212'}
+              backgroundSize={'cover'}
+              color={'gray'}
             >
-              <Flex align={"center"}>
-                {" "}
+              <Flex align={'center'}>
+                {' '}
                 <span
                   style={{
-                    marginRight: "4px",
+                    marginRight: '4px',
                   }}
                 >
                   <FaPenFancy />
@@ -70,18 +70,18 @@ export default function Results({ nft }: { nft: any }) {
                 <Text ml={2}>{shortenAddress(nft.metadata.author)}</Text>
               </Flex>
             </Box>
-            <Text mt={4} px={4} fontSize={"xl"}>
+            <Text mt={4} px={4} fontSize={'xl'}>
               {nft.metadata.title}
             </Text>
-            <Text px={4} fontSize={"sm"} color={"gray"}>
+            <Text px={4} fontSize={'sm'} color={'gray'}>
               {nft.metadata.description}
             </Text>
           </Box>
 
-          <HStack px={4} justifyContent={"space-between"}>
-            <Text letterSpacing={"1.25px"} fontSize={"xl"}>
+          <HStack px={4} justifyContent={'space-between'}>
+            <Text letterSpacing={'1.25px'} fontSize={'xl'}>
               {!formatEther(nft.mintPrice.toString)
-                ? "Free"
+                ? 'Free'
                 : `${formatEther(nft.mintPrice)} ETH`}
             </Text>
             <Button
@@ -90,7 +90,7 @@ export default function Results({ nft }: { nft: any }) {
               color="white"
               colorScheme="purple"
               sx={{
-                bgGradient: "linear(to-r, #c5ff49, #04b670)",
+                bgGradient: 'linear(to-r, #c5ff49, #04b670)',
               }}
               onClick={() => router.push(`/views/${nft.id}`)}
             >
@@ -100,5 +100,5 @@ export default function Results({ nft }: { nft: any }) {
         </Box>
       </Box>
     </>
-  );
+  )
 }

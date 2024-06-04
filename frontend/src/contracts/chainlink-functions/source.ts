@@ -25,4 +25,4 @@ if (!data || !data.ipnsId) {
 
 return Functions.encodeString(data.ipnsId);
 
-`;
+`

@@ -1,32 +1,32 @@
-import { useState, useEffect } from "react";
-import { useSteps, useToast } from "@chakra-ui/react";
-import { createAIAgent } from "@/utils/agent-creation";
-import { useWallets } from "@privy-io/react-auth";
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { useState, useEffect } from 'react'
+import { useSteps, useToast } from '@chakra-ui/react'
+import { createAIAgent } from '@/utils/agent-creation'
+import { useWallets } from '@privy-io/react-auth'
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 export const useCreateAgent = () => {
-  const { wallets } = useWallets();
-  const { activeStep, setActiveStep, isCompleteStep } = useSteps({ index: 0 });
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [agent, setAgent] = useState<any | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [nameError, setNameError] = useState<string | null>(null);
-  const [ensName, setEnsName] = useState<any | string | null>("");
-  const [ensSubName, setSubName] = useState<any | string | null>("");
-  const [progress, setProgress] = useState<string>("");
-  const toast = useToast();
+  const { wallets } = useWallets()
+  const { activeStep, setActiveStep, isCompleteStep } = useSteps({ index: 0 })
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [agent, setAgent] = useState<any | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [nameError, setNameError] = useState<string | null>(null)
+  const [ensName, setEnsName] = useState<any | string | null>('')
+  const [ensSubName, setSubName] = useState<any | string | null>('')
+  const [progress, setProgress] = useState<string>('')
+  const toast = useToast()
 
   const embeddedWallet = wallets.find(
-    (wallet) => wallet.walletClientType !== "privy"
-  );
+    (wallet) => wallet.walletClientType !== 'privy',
+  )
   const reset = () => {
-    setLoading(false);
-    setSuccess(false);
-    setProgress("");
-  };
+    setLoading(false)
+    setSuccess(false)
+    setProgress('')
+  }
 
   // useEffect(() => {
   //   const ensLookup = async () => {
@@ -55,23 +55,23 @@ export const useCreateAgent = () => {
   const handleSubmit = async () => {
     if (activeStep === 1) {
       if (name.length < 2) {
-        setNameError("Name must be at least 2 characters long");
-        return;
+        setNameError('Name must be at least 2 characters long')
+        return
       } else {
-        setNameError(null);
+        setNameError(null)
       }
-      setActiveStep(activeStep + 1);
-      setLoading(true);
+      setActiveStep(activeStep + 1)
+      setLoading(true)
       const metadata = {
         name,
-        template: "",
-        ensSubName: "",
+        template: '',
+        ensSubName: '',
         creator: embeddedWallet?.address,
         description,
-        model: "gpt-3",
-        chain: "Sepolia",
-      };
-      const provider = await embeddedWallet?.getEthereumProvider();
+        model: 'gpt-3',
+        chain: 'Sepolia',
+      }
+      const provider = await embeddedWallet?.getEthereumProvider()
 
       // console.log("my provider", embeddedWallet?.address);
 
@@ -82,14 +82,14 @@ export const useCreateAgent = () => {
           metadata,
           embeddedWallet?.address!,
           provider,
-          (progressMessage) => setProgress(progressMessage)
-        );
+          (progressMessage) => setProgress(progressMessage),
+        )
 
         if (result) {
-          setAgent(result.agent);
-          setLoading(false);
-          setSuccess(true);
-          isCompleteStep(2);
+          setAgent(result.agent)
+          setLoading(false)
+          setSuccess(true)
+          isCompleteStep(2)
         }
       } catch (e: any) {
         // return;
@@ -107,12 +107,12 @@ export const useCreateAgent = () => {
       }
     } else {
       if (activeStep === 2) {
-        reset();
+        reset()
       } else {
-        setActiveStep(activeStep + 1);
+        setActiveStep(activeStep + 1)
       }
     }
-  };
+  }
 
   return {
     name,
@@ -131,5 +131,5 @@ export const useCreateAgent = () => {
     handleSubmit,
     reset,
     progress,
-  };
-};
+  }
+}

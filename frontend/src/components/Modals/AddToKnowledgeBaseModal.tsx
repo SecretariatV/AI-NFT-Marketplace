@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   Box,
   Button,
@@ -13,7 +13,7 @@ import {
   ModalOverlay,
   Textarea,
   Text,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react'
 
 const AddToKnowledgeBaseModal = ({
   isOpen,
@@ -21,33 +21,33 @@ const AddToKnowledgeBaseModal = ({
   onSumbit,
   isDisabled,
 }: {
-  isOpen: boolean;
-  onClose: () => void;
-  onSumbit: () => void;
-  isDisabled: boolean;
+  isOpen: boolean
+  onClose: () => void
+  onSumbit: () => void
+  isDisabled: boolean
 }) => {
   const [agent, setAgent] = useState(
-    "0xb16656B579D293Ff3e36fD6BE6c5368120d7625D"
-  );
+    '0xb16656B579D293Ff3e36fD6BE6c5368120d7625D',
+  )
   const handleSubmit = async () => {
-    onSumbit();
-  };
+    onSumbit()
+  }
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay bg={"blackAlpha.900"} />
+        <ModalOverlay bg={'blackAlpha.900'} />
         <ModalContent py={4} mt={32} bg="#1f2022" color="white">
-          <ModalHeader maxW="67%" letterSpacing={"1.25px"} fontSize={"lg"}>
+          <ModalHeader maxW="67%" letterSpacing={'1.25px'} fontSize={'lg'}>
             Increase your AI Agent's knowledge base
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl mt={4} id="address">
-              <Box position={"relative"} w="100%">
+              <Box position={'relative'} w="100%">
                 <Input
                   w="100%"
-                  borderRadius={"8px"}
-                  border={"0.5px solid #3d3d3d"}
+                  borderRadius={'8px'}
+                  border={'0.5px solid #3d3d3d'}
                   focusBorderColor="#3d3d3d"
                   h="60px"
                   type="text"
@@ -62,8 +62,8 @@ const AddToKnowledgeBaseModal = ({
                   bg="#1f2022"
                   px={2}
                   top={0}
-                  position={"absolute"}
-                  fontSize={"xs"}
+                  position={'absolute'}
+                  fontSize={'xs'}
                 >
                   AI Agent
                 </Box>
@@ -71,13 +71,13 @@ const AddToKnowledgeBaseModal = ({
             </FormControl>
 
             <FormControl id="context" mt={12}>
-              <Box position={"relative"} w="100%">
+              <Box position={'relative'} w="100%">
                 <Textarea
-                  border={"0.5px solid #3d3d3d"}
+                  border={'0.5px solid #3d3d3d'}
                   focusBorderColor="#3d3d3d"
                   placeholder="Add additional context to the document"
                 />
-                <Text fontSize="xs" textAlign="right" color={"gray"}>
+                <Text fontSize="xs" textAlign="right" color={'gray'}>
                   optional
                 </Text>
 
@@ -88,8 +88,8 @@ const AddToKnowledgeBaseModal = ({
                   bg="#1f2022"
                   px={2}
                   top={0}
-                  position={"absolute"}
-                  fontSize={"xs"}
+                  position={'absolute'}
+                  fontSize={'xs'}
                 >
                   Additional Context
                 </Box>
@@ -97,7 +97,7 @@ const AddToKnowledgeBaseModal = ({
             </FormControl>
           </ModalBody>
 
-          <ModalFooter display={"flex"}>
+          <ModalFooter display={'flex'}>
             <Button
               h="60px"
               w="100%"
@@ -111,7 +111,7 @@ const AddToKnowledgeBaseModal = ({
         </ModalContent>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default AddToKnowledgeBaseModal;
+export default AddToKnowledgeBaseModal

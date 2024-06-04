@@ -5,31 +5,31 @@ import {
   FaPlane,
   FaBitcoin,
   FaGlobe,
-} from "react-icons/fa";
+} from 'react-icons/fa'
 
 export const categories = [
   {
-    title: "Food",
+    title: 'Food',
     icon: <FaHamburger />,
   },
   {
-    title: "Health",
+    title: 'Health',
     icon: <FaHeartbeat />,
   },
   {
-    title: "Fitness",
+    title: 'Fitness',
     icon: <FaDumbbell />,
   },
   {
-    title: "Travel",
+    title: 'Travel',
     icon: <FaPlane />,
   },
   {
-    title: "Crypto",
+    title: 'Crypto',
     icon: <FaBitcoin />,
   },
   {
-    title: "Culture",
+    title: 'Culture',
     icon: <FaGlobe />,
   },
-];
+]

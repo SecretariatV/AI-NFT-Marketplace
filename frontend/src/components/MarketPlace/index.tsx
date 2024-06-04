@@ -1,44 +1,44 @@
-import { useEffect, useState } from "react";
-import { Box, Button, Center, Flex, Spinner, Text } from "@chakra-ui/react";
-import { useGlobalContext } from "@/contexts/GlobalContext";
+import { useEffect, useState } from 'react'
+import { Box, Button, Center, Flex, Spinner, Text } from '@chakra-ui/react'
+import { useGlobalContext } from '@/contexts/GlobalContext'
 
-import MarketplaceHeader from "./MarketPlaceHeader";
-import Overview from "./Overview";
-import { BiStore } from "react-icons/bi";
-import Results from "./Results";
-import { categories } from "./categories";
+import MarketplaceHeader from './MarketPlaceHeader'
+import Overview from './Overview'
+import { BiStore } from 'react-icons/bi'
+import Results from './Results'
+import { categories } from './categories'
 
 export default function Marketplace() {
-  const { index, nftData, setNftData, loadingMarket } = useGlobalContext();
-  const [tabIndex, setTabIndex] = useState(0);
-  const [searching, setSearching] = useState(false);
-  const [filtered, setFiltered] = useState<any | null>(null);
+  const { index, nftData, setNftData, loadingMarket } = useGlobalContext()
+  const [tabIndex, setTabIndex] = useState(0)
+  const [searching, setSearching] = useState(false)
+  const [filtered, setFiltered] = useState<any | null>(null)
 
   const resetFilter = () => {
-    setFiltered(null);
-    setSearching(true);
-  };
+    setFiltered(null)
+    setSearching(true)
+  }
 
   useEffect(() => {
     function filterNFTs() {
-      const value = categories[tabIndex - 1].title;
+      const value = categories[tabIndex - 1].title
 
       const filter = nftData.filter(
         (nft: any) =>
-          nft.metadata?.category.toLowerCase() === value.toLowerCase()
-      );
+          nft.metadata?.category.toLowerCase() === value.toLowerCase(),
+      )
 
-      console.log("new value", filter);
+      console.log('new value', filter)
       if (filter) {
-        setFiltered(filter);
+        setFiltered(filter)
       }
-      setSearching(false);
+      setSearching(false)
     }
 
     if (nftData && nftData.length > 0 && tabIndex && searching) {
-      filterNFTs();
+      filterNFTs()
     }
-  }, [tabIndex, searching, nftData]);
+  }, [tabIndex, searching, nftData])
 
   return (
     <>
@@ -58,21 +58,21 @@ export default function Marketplace() {
           <Button
             bg="#181818"
             _hover={{
-              bg: "#181818",
-              color: "white",
+              bg: '#181818',
+              color: 'white',
             }}
             _focus={{
-              bg: "#181818",
-              color: "white",
+              bg: '#181818',
+              color: 'white',
             }}
             color="white"
             leftIcon={<BiStore />}
             h="50px"
             colorScheme="gray"
             onClick={() => {
-              setFiltered(null);
-              setSearching(false);
-              setTabIndex(0);
+              setFiltered(null)
+              setSearching(false)
+              setTabIndex(0)
             }}
           >
             Return
@@ -86,7 +86,7 @@ export default function Marketplace() {
             )}
 
             {filtered && (
-              <Flex w="100%" flexWrap={"wrap"} gap={[2, 2, 8]}>
+              <Flex w="100%" flexWrap={'wrap'} gap={[2, 2, 8]}>
                 {filtered.length > 0 ? (
                   filtered.map((nft: any, i: number) => (
                     <Results key={i} nft={nft} />
@@ -106,7 +106,7 @@ export default function Marketplace() {
         </>
       )}
     </>
-  );
+  )
 }
 
 // /creators

@@ -1,13 +1,13 @@
-import { Button } from "@chakra-ui/react";
+import { Button } from '@chakra-ui/react'
 
 export default function CreateAgentFooter({
   isLoading,
   isSuccess,
   handleSubmit,
 }: {
-  isLoading: boolean;
-  isSuccess: boolean;
-  handleSubmit: () => void;
+  isLoading: boolean
+  isSuccess: boolean
+  handleSubmit: () => void
 }) {
   return (
     <>
@@ -17,19 +17,19 @@ export default function CreateAgentFooter({
         ) : (
           <Button
             _hover={{
-              bgGradient: "linear(to-r, #c5ff49, #04b670)",
-              color: "white",
-              border: "none",
+              bgGradient: 'linear(to-r, #c5ff49, #04b670)',
+              color: 'white',
+              border: 'none',
             }}
             sx={{
-              bgGradient: "linear(to-r, #c5ff49, #04b670)",
-              color: "white",
-              border: "none",
+              bgGradient: 'linear(to-r, #c5ff49, #04b670)',
+              color: 'white',
+              border: 'none',
             }}
             _active={{
-              bgGradient: "linear(to-r, #c5ff49, #04b670)",
-              color: "white",
-              border: "none",
+              bgGradient: 'linear(to-r, #c5ff49, #04b670)',
+              color: 'white',
+              border: 'none',
             }}
             w="220px"
             h="60px"
@@ -41,5 +41,5 @@ export default function CreateAgentFooter({
           </Button>
         ))}
     </>
-  );
+  )
 }

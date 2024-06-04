@@ -1,25 +1,25 @@
-import "@/styles/globals.css";
-import { ChakraProvider } from "@chakra-ui/react";
-import type { AppProps } from "next/app";
-import { GlobalProvider } from "@/contexts/GlobalContext";
-import { PrivyProvider } from "@privy-io/react-auth";
+import '@/styles/globals.css'
+import { ChakraProvider } from '@chakra-ui/react'
+import type { AppProps } from 'next/app'
+import { GlobalProvider } from '@/contexts/GlobalContext'
+import { PrivyProvider } from '@privy-io/react-auth'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <PrivyProvider
       appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID as string}
       config={{
-        loginMethods: ["google", "email"],
+        loginMethods: ['google', 'email'],
         appearance: {
-          theme: "dark",
-          accentColor: "#676FFF",
-          logo: "http://localhost:3000/vercel.svg",
+          theme: 'dark',
+          accentColor: '#676FFF',
+          logo: `${process.env.BASE_URL}/logo-icon.png`,
         },
         embeddedWallets: {
-          createOnLogin: "users-without-wallets",
+          createOnLogin: 'users-without-wallets',
           noPromptOnSignature: false,
         },
-        walletConnectCloudProjectId: "957c795c4c86e7c46609c0cd4064fa00",
+        walletConnectCloudProjectId: '957c795c4c86e7c46609c0cd4064fa00',
       }}
     >
       <ChakraProvider>
@@ -28,11 +28,5 @@ export default function App({ Component, pageProps }: AppProps) {
         </GlobalProvider>
       </ChakraProvider>
     </PrivyProvider>
-  );
-}
-function configureChains(
-  arg0: any[],
-  arg1: any[]
-): { chains: any; publicClient: any } {
-  throw new Error("Function not implemented.");
+  )
 }
