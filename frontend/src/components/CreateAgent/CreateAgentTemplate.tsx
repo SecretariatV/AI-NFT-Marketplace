@@ -1,14 +1,14 @@
-import { Box, HStack, Tooltip, Text } from "@chakra-ui/react";
-import { templates } from "@/utils/const";
-import { useState } from "react";
+import { Box, HStack, Tooltip, Text, Flex } from '@chakra-ui/react'
+import { templates } from '@/utils/const'
+import { useState } from 'react'
 
 export default function CreateAgentTemplate() {
-  const [selected, setSelected] = useState(0);
-  const [showToolTip, setShowToolTip] = useState(false);
+  const [selected, setSelected] = useState(0)
+  const [showToolTip, setShowToolTip] = useState(false)
 
   return (
     <>
-      <HStack mt={8} spacing={8} w="100%">
+      <Flex mt={8} gap={8} w="100%" flexWrap={'wrap'}>
         {templates.map((item, i) => (
           <Tooltip
             opacity={selected === i ? 1 : 0}
@@ -17,45 +17,48 @@ export default function CreateAgentTemplate() {
             label="Coming soon"
           >
             <Box
-              border={i === 0 ? "0.5px solid #db65c1" : "none"}
+              border={i === 0 ? '0.5px solid #db65c1' : 'none'}
               opacity={i === 0 ? 1 : 0.6}
               py={4}
-              h="300px"
+              h={['230px', '230px', '300px']}
               bg="#181818"
-              color={"white"}
-              borderRadius={"18px"}
+              color={'white'}
+              borderRadius={'18px'}
               w="100%"
-              maxW="270px"
+              maxW={['150px', '270px']}
+              minW={['150px', '270px']}
               cursor="pointer"
-              position={"relative"}
-              display={"flex"}
-              flexDir={"column"}
-              justifyContent={"center"}
-              alignItems={"center"}
+              position={'relative'}
+              display={'flex'}
+              flexDir={'column'}
+              justifyContent={'center'}
+              alignItems={'center'}
               onClick={() => {
                 if (i > 0) {
-                  setShowToolTip(true);
-                  setSelected(i);
+                  setShowToolTip(true)
+                  setSelected(i)
                   setTimeout(() => {
-                    setShowToolTip(false);
-                  }, 1000);
+                    setShowToolTip(false)
+                  }, 1000)
                 }
               }}
             >
               <Box
                 as="img"
                 src={item.icon}
-                rounded={"full"}
-                w="150px"
-                h="150px"
+                rounded={'full'}
+                w={['80px', '80px', '150px']}
+                h={['80px', '80px', '150px']}
               />
 
-              <Text my={8}>{item.title}</Text>
+              <Text textAlign={'center'} maxW={['130px', '270px']} my={8}>
+                {item.title}
+              </Text>
             </Box>
           </Tooltip>
         ))}
-      </HStack>
+      </Flex>
       <Box />
     </>
-  );
+  )
 }

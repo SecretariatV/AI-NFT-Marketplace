@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Button,
   Modal,
@@ -10,23 +10,23 @@ import {
   ModalOverlay,
   Text,
   Box,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react'
 
 const PreviewDocumentModal = ({
   isOpen,
   onClose,
   content,
 }: {
-  isOpen: boolean;
-  onClose: () => void;
-  content: string;
+  isOpen: boolean
+  onClose: () => void
+  content: string
 }) => {
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} size={"full"}>
-        <ModalOverlay bg={"blackAlpha.900"} />
+      <Modal isOpen={isOpen} onClose={onClose} size={'full'}>
+        <ModalOverlay bg={'blackAlpha.900'} />
         <ModalContent
-          position={"fixed"}
+          position={'fixed'}
           minH="100vh"
           top={0}
           py={4}
@@ -36,9 +36,9 @@ const PreviewDocumentModal = ({
         >
           <ModalHeader
             maxW="67%"
-            letterSpacing={"1.25px"}
-            fontSize={"xl"}
-            fontWeight={"bold"}
+            letterSpacing={'1.25px'}
+            fontSize={'xl'}
+            fontWeight={'bold'}
           >
             Preview
           </ModalHeader>
@@ -48,14 +48,14 @@ const PreviewDocumentModal = ({
               h="100%"
               maxH="400px"
               w="100%"
-              overflowY={"auto"}
+              overflowY={'auto'}
               bg="gray.700"
-              border={"1px solid gray"}
+              border={'1px solid gray'}
             >
               <Box position="relative">
                 <pre
                   style={{
-                    maxWidth: "400px",
+                    maxWidth: '400px',
                   }}
                 >
                   {content}
@@ -72,7 +72,7 @@ const PreviewDocumentModal = ({
         </ModalContent>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default PreviewDocumentModal;
+export default PreviewDocumentModal

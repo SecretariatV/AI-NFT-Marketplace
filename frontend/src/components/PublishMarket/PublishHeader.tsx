@@ -1,29 +1,29 @@
-import { Button, HStack, Text } from "@chakra-ui/react";
-import { FaChevronLeft } from "react-icons/fa";
-import { useRouter } from "next/router";
+import { Button, HStack, Text } from '@chakra-ui/react'
+import { FaChevronLeft } from 'react-icons/fa'
+import { useRouter } from 'next/router'
 
 export default function PublishHeader({ success }: { success?: boolean }) {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <>
-      <HStack alignItems={"center"} spacing={5}>
+      <HStack alignItems={'center'} spacing={5}>
         <Button
           bg="#181818"
           _hover={{
-            bg: "#181818",
-            color: "white",
+            bg: '#181818',
+            color: 'white',
           }}
           _focus={{
-            bg: "#181818",
-            color: "white",
+            bg: '#181818',
+            color: 'white',
           }}
           color="white"
           leftIcon={<FaChevronLeft />}
           h="50px"
           colorScheme="gray"
           onClick={() => {
-            router.back();
+            router.back()
           }}
         >
           Return
@@ -31,9 +31,9 @@ export default function PublishHeader({ success }: { success?: boolean }) {
         {!success && (
           <>
             <Text
-              fontSize={["xl", "xl", "4xl"]}
-              fontWeight={"light"}
-              letterSpacing={"1.25px"}
+              fontSize={['xl', 'xl', '4xl']}
+              fontWeight={'light'}
+              letterSpacing={'1.25px'}
             >
               Publish to Marketplace
             </Text>
@@ -41,5 +41,5 @@ export default function PublishHeader({ success }: { success?: boolean }) {
         )}
       </HStack>
     </>
-  );
+  )
 }

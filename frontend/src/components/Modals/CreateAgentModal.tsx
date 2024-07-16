@@ -6,22 +6,22 @@ import {
   ModalContent,
   ModalFooter,
   ModalOverlay,
-} from "@chakra-ui/react";
-import { useCreateAgent } from "@/hooks/useCreateAgent";
+} from '@chakra-ui/react'
+import { useCreateAgent } from '@/hooks/useCreateAgent'
 import {
   CreateAgentTemplate,
   CreateAgentStatus,
   CreateAgentFooter,
   CreateAgentInputs,
   CreateAgentHeader,
-} from "../CreateAgent/";
+} from '../CreateAgent/'
 
 const CreateAgentModal = ({
   isOpen,
   onClose,
 }: {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen: boolean
+  onClose: () => void
 }) => {
   const {
     name,
@@ -40,9 +40,9 @@ const CreateAgentModal = ({
     agent,
     reset,
     progress,
-  } = useCreateAgent();
+  } = useCreateAgent()
 
-  let modalBodyContent;
+  let modalBodyContent
   switch (activeStep) {
     case 1:
       modalBodyContent = (
@@ -56,11 +56,11 @@ const CreateAgentModal = ({
           setSubName={setSubName}
           ensName={ensName}
         />
-      );
-      break;
+      )
+      break
     case 0:
-      modalBodyContent = <CreateAgentTemplate />;
-      break;
+      modalBodyContent = <CreateAgentTemplate />
+      break
     default:
       modalBodyContent = (
         <CreateAgentStatus
@@ -71,36 +71,36 @@ const CreateAgentModal = ({
           progress={progress}
           close={onClose}
         />
-      );
-      break;
+      )
+      break
   }
 
   const handleClose = () => {
-    setActiveStep(0);
-    reset();
-    onClose();
-  };
+    setActiveStep(0)
+    reset()
+    onClose()
+  }
 
   return (
     <Box px={32}>
       <Modal
         isOpen={isOpen}
         onClose={handleClose}
-        size={"full"}
+        size={'full'}
         motionPreset="slideInBottom"
         isCentered
       >
-        <ModalOverlay bg={"blackAlpha.900"} />
+        <ModalOverlay bg={'blackAlpha.900'} />
         <ModalContent
           mt={4}
           mb={8}
           bg="#1f2022"
           color="white"
           h="calc(100% - 10vh)"
-          position={"fixed"}
+          position={'fixed'}
           top={0}
-          borderRadius={"30px"}
-          w={["100%", "80%"]}
+          borderRadius={'30px'}
+          w={['100%', '80%']}
         >
           <CreateAgentHeader activeStep={activeStep} />
 
@@ -118,7 +118,7 @@ const CreateAgentModal = ({
         </ModalContent>
       </Modal>
     </Box>
-  );
-};
+  )
+}
 
-export default CreateAgentModal;
+export default CreateAgentModal

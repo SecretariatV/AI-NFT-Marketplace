@@ -1,62 +1,62 @@
 import {
   ChatPromptTemplate,
   MessagesPlaceholder,
-} from "@langchain/core/prompts";
+} from '@langchain/core/prompts'
 
 export const removePrefix = (response: any) => {
-  const index = response.indexOf(":");
+  const index = response.indexOf(':')
   if (index !== -1) {
-    return response.substring(index + 1).trim();
+    return response.substring(index + 1).trim()
   } else {
-    return response.trim();
+    return response.trim()
   }
-};
+}
 
 export async function callVectorDBQAChain(
   query: string,
   index: any,
-  messages: any[] | any
+  messages: any[] | any,
 ) {
   const requestBody = {
     query: query,
     index: index,
     messages: messages,
-  };
+  }
 
   try {
-    const url = process.env.NEXT_PUBLIC_VECTOR_SEARCH_URL as string;
+    const url = `${process.env.BASE_URL}/api/vector-search` as string
     const vectorSearchResponse = await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
-    });
+    })
 
     if (!vectorSearchResponse.ok) {
-      throw new Error("Failed to fetch from vector-search");
+      throw new Error('Failed to fetch from vector-search')
     }
 
-    const result = await vectorSearchResponse.json();
-    return result;
+    const result = await vectorSearchResponse.json()
+    return result
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 }
 
 export function startsWithEthereumAddress(message: string) {
-  const words = message.trim().split(" ");
+  const words = message.trim().split(' ')
   // Check if the first word has the length of an Ethereum address (42 characters including '0x')
-  if (words.length > 0 && words[0].length === 42 && words[0].startsWith("0x")) {
-    return true;
+  if (words.length > 0 && words[0].length === 42 && words[0].startsWith('0x')) {
+    return true
   }
 
-  return false;
+  return false
 }
 
 export const prompt = ChatPromptTemplate.fromMessages([
   [
-    "system",
+    'system',
     `You are a information provider AI agent inspired by pirate captain personality. You may express yourself 
     with nautical terms and pirate slang or adventorous tone, especially when responding to greeting. Sample:
     - Ahoy there, matey! What treasure be ye seekin' today? 
@@ -74,5 +74,5 @@ export const prompt = ChatPromptTemplate.fromMessages([
  
     Final answer:`,
   ],
-  new MessagesPlaceholder("messages"),
-]);
+  new MessagesPlaceholder('messages'),
+])

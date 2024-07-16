@@ -1,4 +1,4 @@
-import { Html, Head, Main, NextScript } from "next/document";
+import { Html, Head, Main, NextScript } from 'next/document'
 
 export default function Document() {
   return (
@@ -6,13 +6,13 @@ export default function Document() {
       <Head />
       <body
         style={{
-          background: "#121212",
-          color: "white",
+          background: '#121212',
+          color: 'white',
         }}
       >
         <Main />
         <NextScript />
       </body>
     </Html>
-  );
+  )
 }

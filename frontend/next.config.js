@@ -1,4 +1,4 @@
-const webpack = require("webpack");
+const webpack = require('webpack')
 
 // const withPWA = require('next-pwa')({
 //   dest: 'public',
@@ -11,14 +11,14 @@ module.exports = {
   webpack: (config, { isServer }) => {
     config.plugins.push(
       new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
-        resource.request = resource.request.replace(/^node:/, "");
-      })
-    );
+        resource.request = resource.request.replace(/^node:/, '')
+      }),
+    )
 
     if (!isServer) {
-      config.resolve.fallback = { fs: false };
+      config.resolve.fallback = { fs: false }
     }
 
-    return config;
+    return config
   },
-};
+}

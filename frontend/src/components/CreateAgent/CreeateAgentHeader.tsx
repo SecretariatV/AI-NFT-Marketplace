@@ -11,29 +11,29 @@ import {
   StepStatus,
   StepTitle,
   Stepper,
-} from "@chakra-ui/react";
-import { steps } from "@/utils/const";
+} from '@chakra-ui/react'
+import { steps } from '@/utils/const'
 
 export default function CreateAgentHeader({
   activeStep,
 }: {
-  activeStep: number;
+  activeStep: number
 }) {
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
+  const [isMobile] = useMediaQuery('(max-width: 768px)')
 
   return (
     <>
       {!isMobile && (
         <>
           <ModalHeader
-            display={"flex"}
-            alignItems={"center"}
+            display={'flex'}
+            alignItems={'center'}
             py={8}
             maxW="67%"
             w="100%"
-            justifyContent={"space-between"}
-            letterSpacing={"1.25px"}
-            fontSize={"lg"}
+            justifyContent={'space-between'}
+            letterSpacing={'1.25px'}
+            fontSize={'lg'}
           >
             <Stepper index={activeStep} colorScheme="purple">
               {steps.map((step, index) => (
@@ -59,5 +59,5 @@ export default function CreateAgentHeader({
         </>
       )}
     </>
-  );
+  )
 }
